@@ -1,4 +1,34 @@
+import { HttpsProxyAgent } from "https-proxy-agent";
 import { getEnvVar } from "../config.js";
+
+let cachedAgent: HttpsProxyAgent<string> | null | undefined;
+
+function getProxyAgent(): HttpsProxyAgent<string> | undefined {
+  if (cachedAgent !== undefined) return cachedAgent ?? undefined;
+
+  const proxyUrl =
+    process.env.HTTPS_PROXY ||
+    process.env.https_proxy ||
+    process.env.HTTP_PROXY ||
+    process.env.http_proxy ||
+    getEnvVar("AGENTMEMORY_PROXY") ||
+    undefined;
+
+  if (!proxyUrl) {
+    cachedAgent = null;
+    return undefined;
+  }
+
+  try {
+    cachedAgent = new HttpsProxyAgent(proxyUrl);
+    return cachedAgent;
+  } catch {
+    cachedAgent = null;
+    return undefined;
+  }
+}
+
+export { getProxyAgent };
 
 export function fetchWithTimeout(
   url: string,
@@ -15,5 +45,13 @@ export function fetchWithTimeout(
     ? AbortSignal.any([init.signal, ctl.signal])
     : ctl.signal;
   const t = setTimeout(() => ctl.abort(), ms);
-  return fetch(url, { ...init, signal }).finally(() => clearTimeout(t));
+
+  const agent = getProxyAgent();
+  const extra = agent
+    ? ({ dispatcher: agent } as Record<string, unknown>)
+    : {};
+
+  return fetch(url, { ...init, ...extra, signal } as RequestInit).finally(() =>
+    clearTimeout(t),
+  );
 }
