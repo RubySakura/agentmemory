@@ -1,10 +1,14 @@
 import { HttpsProxyAgent } from "https-proxy-agent";
+import { request as httpsRequest } from "node:https";
+import { request as httpRequest } from "node:http";
 import { getEnvVar } from "../config.js";
 
 let cachedAgent: HttpsProxyAgent<string> | undefined;
+let agentChecked = false;
 
 function getProxyAgent(): HttpsProxyAgent<string> | undefined {
-  if (cachedAgent) return cachedAgent;
+  if (agentChecked) return cachedAgent;
+  agentChecked = true;
 
   const proxyUrl =
     getEnvVar("HTTPS_PROXY") ||
@@ -26,6 +30,75 @@ function getProxyAgent(): HttpsProxyAgent<string> | undefined {
 
 export { getProxyAgent };
 
+function proxiedFetch(
+  url: string,
+  init: RequestInit,
+  signal: AbortSignal,
+): Promise<Response> {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+    const isHttps = parsed.protocol === "https:";
+    const reqFn = isHttps ? httpsRequest : httpRequest;
+    const agent = getProxyAgent();
+
+    const headers: Record<string, string> = {};
+    if (init.headers) {
+      if (init.headers instanceof Headers) {
+        init.headers.forEach((v, k) => { headers[k] = v; });
+      } else if (Array.isArray(init.headers)) {
+        for (const [k, v] of init.headers) headers[k] = v;
+      } else {
+        Object.assign(headers, init.headers);
+      }
+    }
+
+    const req = reqFn(
+      url,
+      {
+        method: init.method || "GET",
+        headers,
+        ...(agent ? { agent } : {}),
+      },
+      (res) => {
+        const chunks: Buffer[] = [];
+        res.on("data", (chunk: Buffer) => chunks.push(chunk));
+        res.on("end", () => {
+          const body = Buffer.concat(chunks);
+          const respHeaders = new Headers();
+          for (const [k, v] of Object.entries(res.headers)) {
+            if (v) respHeaders.set(k, Array.isArray(v) ? v.join(", ") : v);
+          }
+          resolve(
+            new Response(body, {
+              status: res.statusCode ?? 0,
+              statusText: res.statusMessage ?? "",
+              headers: respHeaders,
+            }),
+          );
+        });
+        res.on("error", reject);
+      },
+    );
+
+    req.on("error", reject);
+    signal.addEventListener("abort", () => {
+      req.destroy(new DOMException("The operation was aborted.", "AbortError"));
+      reject(new DOMException("The operation was aborted.", "AbortError"));
+    });
+
+    if (init.body) {
+      req.write(
+        typeof init.body === "string"
+          ? init.body
+          : init.body instanceof Uint8Array
+            ? Buffer.from(init.body)
+            : JSON.stringify(init.body),
+      );
+    }
+    req.end();
+  });
+}
+
 export function fetchWithTimeout(
   url: string,
   init: RequestInit,
@@ -42,12 +115,11 @@ export function fetchWithTimeout(
     : ctl.signal;
   const t = setTimeout(() => ctl.abort(), ms);
 
-  const agent = getProxyAgent();
-  const extra = agent
-    ? ({ dispatcher: agent } as Record<string, unknown>)
-    : {};
+  const hasProxy = getProxyAgent() !== undefined;
 
-  return fetch(url, { ...init, ...extra, signal } as RequestInit).finally(() =>
-    clearTimeout(t),
-  );
+  const doFetch = hasProxy
+    ? proxiedFetch(url, init, signal)
+    : fetch(url, { ...init, signal });
+
+  return doFetch.finally(() => clearTimeout(t));
 }
