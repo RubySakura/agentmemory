@@ -2,6 +2,7 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import { request as httpsRequest } from "node:https";
 import { request as httpRequest } from "node:http";
 import { getEnvVar } from "../config.js";
+import { logger } from "../logger.js";
 
 let cachedAgent: HttpsProxyAgent<string> | undefined;
 let agentChecked = false;
@@ -22,8 +23,10 @@ function getProxyAgent(): HttpsProxyAgent<string> | undefined {
 
   try {
     cachedAgent = new HttpsProxyAgent(proxyUrl);
+    logger.info("HTTP proxy enabled for LLM requests", { proxy: proxyUrl });
     return cachedAgent;
   } catch {
+    logger.warn("Failed to create proxy agent", { proxy: proxyUrl });
     return undefined;
   }
 }
