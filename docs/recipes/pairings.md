@@ -20,7 +20,7 @@ Recipe with agentmemory — both as MCP servers on the same agent:
     "agentmemory": {
       "type": "stdio",
       "command": "npx",
-      "args": ["@agentmemory/mcp"]
+      "args": ["@ruby_sakura/mcp"]
     }
   }
 }

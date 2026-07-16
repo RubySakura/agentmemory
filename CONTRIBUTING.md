@@ -65,7 +65,7 @@ PRs with commits lacking sign-off will not merge.
 | Directory | What lives here |
 |-|-|
 | `src/triggers/api.ts` | Every HTTP endpoint under `/agentmemory/*`. Adding an MCP tool? Add the REST twin here too. |
-| `src/mcp/` | Standalone MCP server (`@agentmemory/mcp`), tools registry, transport, in-memory KV. |
+| `src/mcp/` | Standalone MCP server (`@ruby_sakura/mcp`), tools registry, transport, in-memory KV. |
 | `src/functions/` | Core memory operations — observe, compress, consolidate, retention, forget, graph, smart-search, export-import, governance. |
 | `src/hooks/` | The 12 auto-hooks that capture sessions in agents. |
 | `src/health/` | Liveness + readiness + alert thresholds. |
@@ -103,7 +103,7 @@ Maintainers cut releases. Every bump touches 8 files in lockstep:
 7. `src/functions/export-import.ts` (`supportedVersions` Set)
 8. `test/export-import.test.ts` (assertion)
 
-Then: CHANGELOG section, PR, merge, tag, GitHub release. The `Publish to npm` workflow picks up the release trigger and publishes `@ruby_sakura/agentmemory`, `@agentmemory/mcp`, and `@agentmemory/fs-watcher` to npm with provenance.
+Then: CHANGELOG section, PR, merge, tag, GitHub release. The `Publish to npm` workflow picks up the release trigger and publishes `@ruby_sakura/agentmemory`, `@ruby_sakura/mcp`, and `@ruby_sakura/fs-watcher` to npm with provenance.
 
 ## Security issues
 

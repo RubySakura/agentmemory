@@ -10,8 +10,6 @@ on:
       - ".github/**"
       - "!.github/workflows/publish.yml"
 
-# Skip concurrent publishes — if two pushes land close together,
-# only the latest one runs.
 concurrency:
   group: npm-publish
   cancel-in-progress: false
@@ -49,7 +47,15 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           npm version patch --no-git-tag-version
           NEW_VERSION=$(node -p "require('./package.json').version")
-          git add package.json
+          # Sync mcp shim version with main package
+          node -e "
+            const fs = require('fs');
+            const p = JSON.parse(fs.readFileSync('packages/mcp/package.json', 'utf8'));
+            p.version = '${NEW_VERSION}';
+            p.dependencies['@ruby_sakura/agentmemory'] = '~${NEW_VERSION}';
+            fs.writeFileSync('packages/mcp/package.json', JSON.stringify(p, null, 2) + '\n');
+          "
+          git add package.json packages/mcp/package.json
           git commit -m "chore: bump version ${OLD_VERSION} -> ${NEW_VERSION} [skip ci]"
           git tag "v${NEW_VERSION}"
           git push origin develop --tags
@@ -59,6 +65,30 @@ jobs:
         run: |
           if npm view "@ruby_sakura/agentmemory@${{ steps.bump.outputs.version }}" version >/dev/null 2>&1; then
             echo "Version ${{ steps.bump.outputs.version }} already published, skipping"
+          else
+            npm publish --provenance --access public
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @ruby_sakura/mcp
+        working-directory: packages/mcp
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "@ruby_sakura/mcp@$VERSION" version >/dev/null 2>&1; then
+            echo "Version $VERSION already published, skipping"
+          else
+            npm publish --provenance --access public
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @ruby_sakura/fs-watcher
+        working-directory: integrations/filesystem-watcher
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "@ruby_sakura/fs-watcher@$VERSION" version >/dev/null 2>&1; then
+            echo "Version $VERSION already published, skipping"
           else
             npm publish --provenance --access public
           fi

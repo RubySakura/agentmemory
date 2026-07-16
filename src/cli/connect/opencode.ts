@@ -24,11 +24,11 @@ const DETECT_DIR = join(homedir(), ".config", "opencode");
 // `${VAR:-default}` values, and writing them literally would override the
 // user's real shell AGENTMEMORY_URL with an unexpanded string. The stdio
 // child inherits the shell environment (an exported AGENTMEMORY_URL /
-// AGENTMEMORY_SECRET still reaches the server), and the @agentmemory/mcp
+// AGENTMEMORY_SECRET still reaches the server), and the @ruby_sakura/mcp
 // shim defaults unset vars (URL -> localhost:3111, no secret, all tools).
 const OPENCODE_ENTRY = {
   type: "local",
-  command: ["npx", "-y", "@agentmemory/mcp"],
+  command: ["npx", "-y", "@ruby_sakura/mcp"],
   enabled: true,
 };
 
@@ -38,7 +38,7 @@ type McpEntry = Record<string, unknown>;
 function entryMatches(entry: unknown): boolean {
   if (!entry || typeof entry !== "object") return false;
   const command = (entry as McpEntry)["command"];
-  return Array.isArray(command) && command.includes("@agentmemory/mcp");
+  return Array.isArray(command) && command.includes("@ruby_sakura/mcp");
 }
 
 export const adapter: ConnectAdapter = {

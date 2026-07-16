@@ -36,7 +36,7 @@ Add to `~/.config/opencode/opencode.json` or your project's `.opencode/opencode.
   "mcp": {
     "agentmemory": {
       "type": "local",
-      "command": ["npx", "-y", "@agentmemory/mcp"],
+      "command": ["npx", "-y", "@ruby_sakura/mcp"],
       "enabled": true
     }
   }

@@ -216,7 +216,7 @@ Quick start:
   npx @ruby_sakura/agentmemory status   # health + memory count + flags
   npx @ruby_sakura/agentmemory upgrade  # upgrade agentmemory + iii runtime
   npx @ruby_sakura/agentmemory mcp      # standalone MCP server (no engine)
-  npx @agentmemory/mcp                  # same as above (shim package)
+  npx @ruby_sakura/mcp                  # same as above (shim package)
 `);
   process.exit(0);
 }

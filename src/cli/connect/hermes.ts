@@ -31,7 +31,7 @@ export const adapter: ConnectAdapter = {
         "  mcp_servers:",
         "    agentmemory:",
         "      command: npx",
-        '      args: ["-y", "@agentmemory/mcp"]',
+        '      args: ["-y", "@ruby_sakura/mcp"]',
         "",
         "  memory:",
         "    provider: agentmemory",

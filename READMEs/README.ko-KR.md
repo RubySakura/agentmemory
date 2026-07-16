@@ -212,7 +212,7 @@ agentmemory는 hooks, MCP, REST API를 지원하는 모든 에이전트와 호�
 npx @ruby_sakura/agentmemory
 ```
 
-> **v0.9.0의 새로운 기능** — [agent-memory.dev](https://agent-memory.dev)의 랜딩 사이트, 파일시스템 커넥터(`@agentmemory/fs-watcher`), 독립형 MCP가 이제 실행 중인 서버로 프록시되어 hooks와 뷰어가 일치합니다. 모든 삭제 경로에 감사 정책이 코드로 명문화되었고, 작은 Node 프로세스에서 health가 `memory_critical`로 잘못 표시되지 않습니다. 전체 노트는 [CHANGELOG.md](../CHANGELOG.md#090--2026-04-18)에서 확인할 수 있습니다.
+> **v0.9.0의 새로운 기능** — [agent-memory.dev](https://agent-memory.dev)의 랜딩 사이트, 파일시스템 커넥터(`@ruby_sakura/fs-watcher`), 독립형 MCP가 이제 실행 중인 서버로 프록시되어 hooks와 뷰어가 일치합니다. 모든 삭제 경로에 감사 정책이 코드로 명문화되었고, 작은 Node 프로세스에서 health가 `memory_critical`로 잘못 표시되지 않습니다. 전체 노트는 [CHANGELOG.md](../CHANGELOG.md#090--2026-04-18)에서 확인할 수 있습니다.
 
 ---
 
@@ -428,7 +428,7 @@ npx @ruby_sakura/agentmemory upgrade
 ### Claude Code (블록 한 번, 붙여넣기)
 
 ```text
-Install agentmemory: run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server. Then run `/plugin marketplace add rohitg00/agentmemory` and `/plugin install agentmemory` — the plugin registers all 12 hooks, 4 skills, AND auto-wires the `@agentmemory/mcp` stdio server via its `.mcp.json`, so you get 53 MCP tools (memory_smart_search, memory_save, memory_sessions, memory_governance_delete, etc.) without any extra config step. Verify with `curl http://localhost:3111/agentmemory/health`. The real-time viewer is at http://localhost:3113.
+Install agentmemory: run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server. Then run `/plugin marketplace add rohitg00/agentmemory` and `/plugin install agentmemory` — the plugin registers all 12 hooks, 4 skills, AND auto-wires the `@ruby_sakura/mcp` stdio server via its `.mcp.json`, so you get 53 MCP tools (memory_smart_search, memory_save, memory_sessions, memory_governance_delete, etc.) without any extra config step. Verify with `curl http://localhost:3111/agentmemory/health`. The real-time viewer is at http://localhost:3113.
 ```
 
 #### 플러그인 설치 없이 Claude Code 사용 (MCP-독립형 경로)
@@ -457,7 +457,7 @@ codex plugin add agentmemory@agentmemory
 
 Codex 플러그인은 Claude Code 플러그인과 동일한 `plugin/` 디렉터리에서 제공됩니다. 다음을 등록합니다:
 
-- `@agentmemory/mcp`를 MCP 서버로 등록 (`AGENTMEMORY_URL`이 실행 중인 agentmemory 서버를 가리킬 때 51개 도구 모두 프록시. 도달 가능한 서버가 없으면 로컬에서 7개 도구로 폴백)
+- `@ruby_sakura/mcp`를 MCP 서버로 등록 (`AGENTMEMORY_URL`이 실행 중인 agentmemory 서버를 가리킬 때 51개 도구 모두 프록시. 도달 가능한 서버가 없으면 로컬에서 7개 도구로 폴백)
 - 6개 라이프사이클 hooks: `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `PreCompact`, `Stop`
 - 4개 skills: `/recall`, `/remember`, `/session-history`, `/forget`
 
@@ -485,7 +485,7 @@ Install agentmemory for OpenClaw. Run `npx @ruby_sakura/agentmemory` in a separa
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "http://localhost:3111"
       }
@@ -509,7 +509,7 @@ Install agentmemory for Hermes. Run `npx @ruby_sakura/agentmemory` in a separate
 mcp_servers:
   agentmemory:
     command: npx
-    args: ["-y", "@agentmemory/mcp"]
+    args: ["-y", "@ruby_sakura/mcp"]
 
 memory:
   provider: agentmemory
@@ -530,7 +530,7 @@ agentmemory 항목은 `mcpServers` 형태를 사용하는 모든 호스트(Curso
 ```json
 "agentmemory": {
   "command": "npx",
-  "args": ["-y", "@agentmemory/mcp"],
+  "args": ["-y", "@ruby_sakura/mcp"],
   "env": {
     "AGENTMEMORY_URL": "${AGENTMEMORY_URL}",
     "AGENTMEMORY_SECRET": "${AGENTMEMORY_SECRET}"
@@ -546,11 +546,11 @@ agentmemory 항목은 `mcpServers` 형태를 사용하는 모든 호스트(Curso
 | **Claude Desktop** | `claude_desktop_config.json` (Application Support) | `mcpServers`에 병합. 편집 후 Claude Desktop 재시작. |
 | **Cline / Roo Code / Kilo Code** | Cline MCP settings (Settings UI → MCP Servers → Edit) | 동일한 `mcpServers` 블록. |
 | **Windsurf** | `~/.codeium/windsurf/mcp_config.json` | 동일한 `mcpServers` 블록. |
-| **Gemini CLI** | `~/.gemini/settings.json` | `gemini mcp add agentmemory npx -y @agentmemory/mcp --scope user` (자동 병합). |
+| **Gemini CLI** | `~/.gemini/settings.json` | `gemini mcp add agentmemory npx -y @ruby_sakura/mcp --scope user` (자동 병합). |
 | **OpenClaw** | OpenClaw MCP config | 동일한 `mcpServers` 블록을 사용하거나, 더 깊은 [memory plugin](../integrations/openclaw/)을 사용. |
-| **Codex CLI (MCP only)** | `.codex/config.toml` | TOML 형식: `codex mcp add agentmemory -- npx -y @agentmemory/mcp`, 또는 `[mcp_servers.agentmemory]`를 수동으로 추가. |
+| **Codex CLI (MCP only)** | `.codex/config.toml` | TOML 형식: `codex mcp add agentmemory -- npx -y @ruby_sakura/mcp`, 또는 `[mcp_servers.agentmemory]`를 수동으로 추가. |
 | **Codex CLI (full plugin)** | Codex 플러그인 마켓플레이스 | `codex plugin marketplace add rohitg00/agentmemory` 후 `codex plugin add agentmemory@agentmemory`. MCP + 6 lifecycle hooks (SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, PreCompact, Stop) + 4 skills 등록. Codex Desktop에서는 [openai/codex#16430](https://github.com/openai/codex/issues/16430)이 머지될 때까지 `agentmemory connect codex --with-hooks`도 실행해야 합니다 — 현재 그곳에서는 플러그인 hooks가 동작하지 않습니다. |
-| **OpenCode (MCP only)** | `opencode.json` | 다른 형식 — 최상위 `mcp` 키, 명령은 배열로: `{"mcp": {"agentmemory": {"type": "local", "command": ["npx", "-y", "@agentmemory/mcp"], "enabled": true}}}`. |
+| **OpenCode (MCP only)** | `opencode.json` | 다른 형식 — 최상위 `mcp` 키, 명령은 배열로: `{"mcp": {"agentmemory": {"type": "local", "command": ["npx", "-y", "@ruby_sakura/mcp"], "enabled": true}}}`. |
 | **OpenCode (full plugin)** | `plugin/opencode/` | 세션 라이프사이클, 메시지, 도구, 오류를 다루는 22개의 자동 캡처 hooks. 두 개의 슬래시 명령(`/recall`, `/remember`). `plugin/opencode/`를 OpenCode workspace에 복사한 후 `opencode.json`에 플러그인 항목을 추가하십시오. 전체 hook 표 + gap 분석은 [`plugin/opencode/README.md`](../plugin/opencode/README.md) 참고. |
 | **pi** | `~/.pi/agent/extensions/agentmemory` | [`integrations/pi`](../integrations/pi/)를 복사하고 pi를 재시작. |
 | **Hermes Agent** | `~/.hermes/config.yaml` | `memory.provider: agentmemory`로 더 깊은 [memory provider plugin](../integrations/hermes/) 사용. |
@@ -643,7 +643,7 @@ npx -y @ruby_sakura/agentmemory
 ```powershell
 npx -y @ruby_sakura/agentmemory mcp
 # or via the shim package:
-npx -y @agentmemory/mcp
+npx -y @ruby_sakura/mcp
 ```
 
 **Windows 진단:** `npx @ruby_sakura/agentmemory`가 실패하면 `--verbose`로 다시 실행하여 실제 엔진 stderr를 확인하십시오. 일반적인 실패 모드:
@@ -821,7 +821,7 @@ npm install @xenova/transformers
 
 53개 도구, 6개 리소스, 3개 프롬프트, 4개 skills — 모든 에이전트를 위한 가장 포괄적인 MCP 메모리 툴킷.
 
-> **MCP shim 대 전체 서버:** 게시된 `@agentmemory/mcp` 패키지는 얇은 shim입니다. `AGENTMEMORY_URL`을 통해 실행 중인 agentmemory 서버에 도달할 수 있을 때 **만** 전체 51-도구 표면을 노출합니다(프록시 모드). 도달 가능한 서버가 없으면 shim은 7-도구 로컬 세트(`memory_save`, `memory_recall`, `memory_smart_search`, `memory_sessions`, `memory_export`, `memory_audit`, `memory_governance_delete`)로 폴백합니다. `AGENTMEMORY_TOOLS=core|all` 환경 변수는 *서버 측* 플래그입니다 — shim의 `env` 블록에 설정해도 효과가 없습니다. Cursor / OpenCode / Gemini CLI에서 도구가 7개만 보인다면 `npx @ruby_sakura/agentmemory`(또는 Docker 스택)를 시작하고 `AGENTMEMORY_URL=http://localhost:3111`을 설정하십시오.
+> **MCP shim 대 전체 서버:** 게시된 `@ruby_sakura/mcp` 패키지는 얇은 shim입니다. `AGENTMEMORY_URL`을 통해 실행 중인 agentmemory 서버에 도달할 수 있을 때 **만** 전체 51-도구 표면을 노출합니다(프록시 모드). 도달 가능한 서버가 없으면 shim은 7-도구 로컬 세트(`memory_save`, `memory_recall`, `memory_smart_search`, `memory_sessions`, `memory_export`, `memory_audit`, `memory_governance_delete`)로 폴백합니다. `AGENTMEMORY_TOOLS=core|all` 환경 변수는 *서버 측* 플래그입니다 — shim의 `env` 블록에 설정해도 효과가 없습니다. Cursor / OpenCode / Gemini CLI에서 도구가 7개만 보인다면 `npx @ruby_sakura/agentmemory`(또는 Docker 스택)를 시작하고 `AGENTMEMORY_URL=http://localhost:3111`을 설정하십시오.
 
 ### 51개 도구
 
@@ -905,7 +905,7 @@ npm install @xenova/transformers
 
 ```bash
 npx -y @ruby_sakura/agentmemory mcp   # canonical (always available)
-npx -y @agentmemory/mcp                # shim package alias
+npx -y @ruby_sakura/mcp                # shim package alias
 ```
 
 또는 에이전트의 MCP 설정에 추가:
@@ -916,7 +916,7 @@ npx -y @agentmemory/mcp                # shim package alias
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "http://localhost:3111"
       }
@@ -933,7 +933,7 @@ OpenCode (`opencode.json`):
   "mcp": {
     "agentmemory": {
       "type": "local",
-      "command": ["npx", "-y", "@agentmemory/mcp"],
+      "command": ["npx", "-y", "@ruby_sakura/mcp"],
       "enabled": true
     }
   },

@@ -35,7 +35,7 @@ For zero-code setup, add this MCP server so OpenClaw gets all 43 memory tools:
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"]
+      "args": ["-y", "@ruby_sakura/mcp"]
     }
   }
 }
@@ -82,7 +82,7 @@ Then add to your OpenClaw MCP config:
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"]
+      "args": ["-y", "@ruby_sakura/mcp"]
     }
   }
 }

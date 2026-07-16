@@ -212,7 +212,7 @@ agentmemory किसी भी ऐसे एजेंट के साथ क�
 npx @ruby_sakura/agentmemory
 ```
 
-> **v0.9.0 में नया** — लैंडिंग साइट [agent-memory.dev](https://agent-memory.dev), फाइलसिस्टम कनेक्टर (`@agentmemory/fs-watcher`), स्टैंडअलोन MCP अब चल रहे सर्वर को प्रॉक्सी करता है ताकि hooks और व्यूअर सहमत हों, हर delete path में audit policy कोडिफाई की गई, small Node प्रक्रियाओं पर health अब `memory_critical` फ़्लैग नहीं करता। पूरे नोट्स [CHANGELOG.md](../CHANGELOG.md#090--2026-04-18) में।
+> **v0.9.0 में नया** — लैंडिंग साइट [agent-memory.dev](https://agent-memory.dev), फाइलसिस्टम कनेक्टर (`@ruby_sakura/fs-watcher`), स्टैंडअलोन MCP अब चल रहे सर्वर को प्रॉक्सी करता है ताकि hooks और व्यूअर सहमत हों, हर delete path में audit policy कोडिफाई की गई, small Node प्रक्रियाओं पर health अब `memory_critical` फ़्लैग नहीं करता। पूरे नोट्स [CHANGELOG.md](../CHANGELOG.md#090--2026-04-18) में।
 
 ---
 
@@ -428,7 +428,7 @@ Implementation विवरण `src/cli.ts` में हैं (`src/cli.ts:544
 ### Claude Code (एक block, paste करें)
 
 ```text
-Install agentmemory: run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server. Then run `/plugin marketplace add rohitg00/agentmemory` and `/plugin install agentmemory` — the plugin registers all 12 hooks, 4 skills, AND auto-wires the `@agentmemory/mcp` stdio server via its `.mcp.json`, so you get 53 MCP tools (memory_smart_search, memory_save, memory_sessions, memory_governance_delete, etc.) without any extra config step. Verify with `curl http://localhost:3111/agentmemory/health`. The real-time viewer is at http://localhost:3113.
+Install agentmemory: run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server. Then run `/plugin marketplace add rohitg00/agentmemory` and `/plugin install agentmemory` — the plugin registers all 12 hooks, 4 skills, AND auto-wires the `@ruby_sakura/mcp` stdio server via its `.mcp.json`, so you get 53 MCP tools (memory_smart_search, memory_save, memory_sessions, memory_governance_delete, etc.) without any extra config step. Verify with `curl http://localhost:3111/agentmemory/health`. The real-time viewer is at http://localhost:3113.
 ```
 
 #### Plugin install के बिना Claude Code (MCP-standalone path)
@@ -457,7 +457,7 @@ codex plugin add agentmemory@agentmemory
 
 Codex plugin उसी `plugin/` directory से ship होता है जिससे Claude Code plugin। यह register करता है:
 
-- `@agentmemory/mcp` MCP सर्वर के रूप में (जब `AGENTMEMORY_URL` चल रहे agentmemory सर्वर पर point करता है, तो सभी 51 tools proxy करता है; कोई पहुँच योग्य सर्वर न होने पर locally 7 tools पर fallback करता है)
+- `@ruby_sakura/mcp` MCP सर्वर के रूप में (जब `AGENTMEMORY_URL` चल रहे agentmemory सर्वर पर point करता है, तो सभी 51 tools proxy करता है; कोई पहुँच योग्य सर्वर न होने पर locally 7 tools पर fallback करता है)
 - 6 lifecycle hooks: `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `PreCompact`, `Stop`
 - 4 skills: `/recall`, `/remember`, `/session-history`, `/forget`
 
@@ -485,7 +485,7 @@ Install agentmemory for OpenClaw. Run `npx @ruby_sakura/agentmemory` in a separa
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "http://localhost:3111"
       }
@@ -509,7 +509,7 @@ Install agentmemory for Hermes. Run `npx @ruby_sakura/agentmemory` in a separate
 mcp_servers:
   agentmemory:
     command: npx
-    args: ["-y", "@agentmemory/mcp"]
+    args: ["-y", "@ruby_sakura/mcp"]
 
 memory:
   provider: agentmemory
@@ -530,7 +530,7 @@ agentmemory entry `mcpServers` shape का उपयोग करने वा�
 ```json
 "agentmemory": {
   "command": "npx",
-  "args": ["-y", "@agentmemory/mcp"],
+  "args": ["-y", "@ruby_sakura/mcp"],
   "env": {
     "AGENTMEMORY_URL": "${AGENTMEMORY_URL}",
     "AGENTMEMORY_SECRET": "${AGENTMEMORY_SECRET}"
@@ -546,11 +546,11 @@ agentmemory entry `mcpServers` shape का उपयोग करने वा�
 | **Claude Desktop** | `claude_desktop_config.json` (Application Support) | `mcpServers` में merge करें। Edit के बाद Claude Desktop restart करें। |
 | **Cline / Roo Code / Kilo Code** | Cline MCP settings (Settings UI → MCP Servers → Edit) | वही `mcpServers` block। |
 | **Windsurf** | `~/.codeium/windsurf/mcp_config.json` | वही `mcpServers` block। |
-| **Gemini CLI** | `~/.gemini/settings.json` | `gemini mcp add agentmemory npx -y @agentmemory/mcp --scope user` (auto-merges)। |
+| **Gemini CLI** | `~/.gemini/settings.json` | `gemini mcp add agentmemory npx -y @ruby_sakura/mcp --scope user` (auto-merges)। |
 | **OpenClaw** | OpenClaw MCP config | वही `mcpServers` block, या गहरे [memory plugin](../integrations/openclaw/) का उपयोग करें। |
-| **Codex CLI (केवल MCP)** | `.codex/config.toml` | TOML shape: `codex mcp add agentmemory -- npx -y @agentmemory/mcp`, या manually `[mcp_servers.agentmemory]` जोड़ें। |
+| **Codex CLI (केवल MCP)** | `.codex/config.toml` | TOML shape: `codex mcp add agentmemory -- npx -y @ruby_sakura/mcp`, या manually `[mcp_servers.agentmemory]` जोड़ें। |
 | **Codex CLI (पूर्ण plugin)** | Codex plugin marketplace | `codex plugin marketplace add rohitg00/agentmemory` फिर `codex plugin add agentmemory@agentmemory`। MCP + 6 lifecycle hooks (SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, PreCompact, Stop) + 4 skills register करता है। Codex Desktop पर, [openai/codex#16430](https://github.com/openai/codex/issues/16430) land होने तक `agentmemory connect codex --with-hooks` भी चलाएँ — plugin hooks वर्तमान में वहाँ silent हैं। |
-| **OpenCode (केवल MCP)** | `opencode.json` | अलग shape — top-level `mcp` key, command array के रूप में: `{"mcp": {"agentmemory": {"type": "local", "command": ["npx", "-y", "@agentmemory/mcp"], "enabled": true}}}`। |
+| **OpenCode (केवल MCP)** | `opencode.json` | अलग shape — top-level `mcp` key, command array के रूप में: `{"mcp": {"agentmemory": {"type": "local", "command": ["npx", "-y", "@ruby_sakura/mcp"], "enabled": true}}}`। |
 | **OpenCode (पूर्ण plugin)** | `plugin/opencode/` | Session lifecycle, messages, tools, errors को कवर करने वाले 22 auto-capture hooks। दो slash commands (`/recall`, `/remember`)। `plugin/opencode/` को अपने OpenCode workspace में copy करें और plugin entry को `opencode.json` में जोड़ें। पूरी hook table + gap analysis के लिए [`plugin/opencode/README.md`](../plugin/opencode/README.md) देखें। |
 | **pi** | `~/.pi/agent/extensions/agentmemory` | [`integrations/pi`](../integrations/pi/) copy करें और pi restart करें। |
 | **Hermes Agent** | `~/.hermes/config.yaml` | गहरे [memory provider plugin](../integrations/hermes/) का उपयोग `memory.provider: agentmemory` के साथ करें। |
@@ -643,7 +643,7 @@ npx -y @ruby_sakura/agentmemory
 ```powershell
 npx -y @ruby_sakura/agentmemory mcp
 # या shim package के माध्यम से:
-npx -y @agentmemory/mcp
+npx -y @ruby_sakura/mcp
 ```
 
 **Windows के लिए diagnostics:** अगर `npx @ruby_sakura/agentmemory` fail करता है, तो वास्तविक engine stderr देखने के लिए `--verbose` के साथ फिर से चलाएँ। सामान्य failure modes:
@@ -840,7 +840,7 @@ npm install @xenova/transformers
 
 53 tools, 6 resources, 3 prompts, और 4 skills — किसी भी agent के लिए सबसे व्यापक MCP memory toolkit।
 
-> **MCP shim बनाम full server:** published `@agentmemory/mcp` package एक thin shim है। यह full 51-tool surface को **केवल तभी expose करता है जब यह `AGENTMEMORY_URL` के माध्यम से चल रहे agentmemory server तक पहुँच सके** (proxy mode)। कोई पहुँच योग्य server न होने पर, shim 7-tool local set (`memory_save`, `memory_recall`, `memory_smart_search`, `memory_sessions`, `memory_export`, `memory_audit`, `memory_governance_delete`) पर fallback करता है। `AGENTMEMORY_TOOLS=core|all` env var एक *server-side* flag है — shim के `env` block में set करने का कोई असर नहीं। अगर आप Cursor / OpenCode / Gemini CLI में केवल 7 tools देखते हैं, तो `npx @ruby_sakura/agentmemory` (या Docker stack) शुरू करें और `AGENTMEMORY_URL=http://localhost:3111` set करें।
+> **MCP shim बनाम full server:** published `@ruby_sakura/mcp` package एक thin shim है। यह full 51-tool surface को **केवल तभी expose करता है जब यह `AGENTMEMORY_URL` के माध्यम से चल रहे agentmemory server तक पहुँच सके** (proxy mode)। कोई पहुँच योग्य server न होने पर, shim 7-tool local set (`memory_save`, `memory_recall`, `memory_smart_search`, `memory_sessions`, `memory_export`, `memory_audit`, `memory_governance_delete`) पर fallback करता है। `AGENTMEMORY_TOOLS=core|all` env var एक *server-side* flag है — shim के `env` block में set करने का कोई असर नहीं। अगर आप Cursor / OpenCode / Gemini CLI में केवल 7 tools देखते हैं, तो `npx @ruby_sakura/agentmemory` (या Docker stack) शुरू करें और `AGENTMEMORY_URL=http://localhost:3111` set करें।
 
 ### 51 Tools
 
@@ -924,7 +924,7 @@ Full server के बिना चलाएँ — किसी भी MCP clie
 
 ```bash
 npx -y @ruby_sakura/agentmemory mcp   # canonical (हमेशा उपलब्ध)
-npx -y @agentmemory/mcp                # shim package alias
+npx -y @ruby_sakura/mcp                # shim package alias
 ```
 
 या अपने agent की MCP config में जोड़ें:
@@ -935,7 +935,7 @@ npx -y @agentmemory/mcp                # shim package alias
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "http://localhost:3111"
       }
@@ -952,7 +952,7 @@ OpenCode (`opencode.json`):
   "mcp": {
     "agentmemory": {
       "type": "local",
-      "command": ["npx", "-y", "@agentmemory/mcp"],
+      "command": ["npx", "-y", "@ruby_sakura/mcp"],
       "enabled": true
     }
   },

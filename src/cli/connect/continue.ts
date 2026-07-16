@@ -47,7 +47,7 @@ function buildEntry(): ContinueEntry {
 
 function entryIsAgentmemory(entry: ContinueEntry | undefined): boolean {
   if (!entry) return false;
-  return entry.name === "agentmemory" && entry.args.includes("@agentmemory/mcp");
+  return entry.name === "agentmemory" && entry.args.includes("@ruby_sakura/mcp");
 }
 
 // Minimal YAML emitter for the agentmemory entry. Quotes string values

@@ -1,16 +1,16 @@
-# @agentmemory/mcp
+# @ruby_sakura/mcp
 
 Standalone MCP server for [agentmemory](https://github.com/rohitg00/agentmemory).
 
 This is a thin shim package that re-exposes the standalone MCP entrypoint from
 [`@ruby_sakura/agentmemory`](https://www.npmjs.com/package/@ruby_sakura/agentmemory),
-so MCP client configs that say `npx @agentmemory/mcp` work out of the box
+so MCP client configs that say `npx @ruby_sakura/mcp` work out of the box
 without installing the full package first.
 
 ## Usage
 
 ```bash
-npx -y @agentmemory/mcp
+npx -y @ruby_sakura/mcp
 ```
 
 Or wire it into your MCP client (Claude Desktop, OpenClaw, Cursor, Codex, etc.):
@@ -20,7 +20,7 @@ Or wire it into your MCP client (Claude Desktop, OpenClaw, Cursor, Codex, etc.):
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"]
+      "args": ["-y", "@ruby_sakura/mcp"]
     }
   }
 }
@@ -42,7 +42,7 @@ The original plan in [issue #120](https://github.com/rohitg00/agentmemory/issues
 was to publish `agentmemory-mcp` as an unscoped package, but npm's name-similarity
 policy blocks that name because of an unrelated package called `agent-memory-mcp`.
 Publishing under the `@agentmemory` scope sidesteps the conflict and keeps the
-"dedicated standalone package" UX — `npx @agentmemory/mcp` is one character
+"dedicated standalone package" UX — `npx @ruby_sakura/mcp` is one character
 longer than `npx agentmemory-mcp` and works on the live registry.
 
 ## License

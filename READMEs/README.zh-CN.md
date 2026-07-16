@@ -212,7 +212,7 @@ agentmemory 兼容任何支持 hooks、MCP 或 REST API 的代理。所有代理
 npx @ruby_sakura/agentmemory
 ```
 
-> **v0.9.0 新功能** — 落地页 [agent-memory.dev](https://agent-memory.dev) 上线,文件系统连接器(`@agentmemory/fs-watcher`),独立 MCP 现在代理至正在运行的服务器,使 hooks 和查看器保持一致,审计策略在所有删除路径上得到统一,健康状态在小型 Node 进程上不再误报 `memory_critical`。完整变更见 [CHANGELOG.md](../CHANGELOG.md#090--2026-04-18)。
+> **v0.9.0 新功能** — 落地页 [agent-memory.dev](https://agent-memory.dev) 上线,文件系统连接器(`@ruby_sakura/fs-watcher`),独立 MCP 现在代理至正在运行的服务器,使 hooks 和查看器保持一致,审计策略在所有删除路径上得到统一,健康状态在小型 Node 进程上不再误报 `memory_critical`。完整变更见 [CHANGELOG.md](../CHANGELOG.md#090--2026-04-18)。
 
 ---
 
@@ -428,7 +428,7 @@ npx @ruby_sakura/agentmemory upgrade
 ### Claude Code(一段话,直接粘贴)
 
 ```text
-Install agentmemory: run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server. Then run `/plugin marketplace add rohitg00/agentmemory` and `/plugin install agentmemory` — the plugin registers all 12 hooks, 4 skills, AND auto-wires the `@agentmemory/mcp` stdio server via its `.mcp.json`, so you get 53 MCP tools (memory_smart_search, memory_save, memory_sessions, memory_governance_delete, etc.) without any extra config step. Verify with `curl http://localhost:3111/agentmemory/health`. The real-time viewer is at http://localhost:3113.
+Install agentmemory: run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server. Then run `/plugin marketplace add rohitg00/agentmemory` and `/plugin install agentmemory` — the plugin registers all 12 hooks, 4 skills, AND auto-wires the `@ruby_sakura/mcp` stdio server via its `.mcp.json`, so you get 53 MCP tools (memory_smart_search, memory_save, memory_sessions, memory_governance_delete, etc.) without any extra config step. Verify with `curl http://localhost:3111/agentmemory/health`. The real-time viewer is at http://localhost:3113.
 ```
 
 #### Claude Code 不安装插件(MCP-standalone 路径)
@@ -458,7 +458,7 @@ codex plugin add agentmemory@agentmemory
 
 Codex 插件与 Claude Code 插件同源,来自相同的 `plugin/` 目录。它注册:
 
-- `@agentmemory/mcp` 作为 MCP 服务器(当 `AGENTMEMORY_URL` 指向运行中的 agentmemory 服务器时,代理全部 51 个工具;若服务器不可达,本地回退至 7 个工具)
+- `@ruby_sakura/mcp` 作为 MCP 服务器(当 `AGENTMEMORY_URL` 指向运行中的 agentmemory 服务器时,代理全部 51 个工具;若服务器不可达,本地回退至 7 个工具)
 - 6 个生命周期 hooks:`SessionStart`、`UserPromptSubmit`、`PreToolUse`、`PostToolUse`、`PreCompact`、`Stop`
 - 4 个 skills:`/recall`、`/remember`、`/session-history`、`/forget`
 
@@ -486,7 +486,7 @@ Install agentmemory for OpenClaw. Run `npx @ruby_sakura/agentmemory` in a separa
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "http://localhost:3111"
       }
@@ -510,7 +510,7 @@ Install agentmemory for Hermes. Run `npx @ruby_sakura/agentmemory` in a separate
 mcp_servers:
   agentmemory:
     command: npx
-    args: ["-y", "@agentmemory/mcp"]
+    args: ["-y", "@ruby_sakura/mcp"]
 
 memory:
   provider: agentmemory
@@ -531,7 +531,7 @@ Verify with `curl http://localhost:3111/agentmemory/health`. Open http://localho
 ```json
 "agentmemory": {
   "command": "npx",
-  "args": ["-y", "@agentmemory/mcp"],
+  "args": ["-y", "@ruby_sakura/mcp"],
   "env": {
     "AGENTMEMORY_URL": "${AGENTMEMORY_URL}",
     "AGENTMEMORY_SECRET": "${AGENTMEMORY_SECRET}"
@@ -547,11 +547,11 @@ Verify with `curl http://localhost:3111/agentmemory/health`. Open http://localho
 | **Claude Desktop** | `claude_desktop_config.json` (Application Support) | 合并到 `mcpServers`。编辑后重启 Claude Desktop。 |
 | **Cline / Roo Code / Kilo Code** | Cline MCP 设置 (设置 UI → MCP Servers → Edit) | 同样的 `mcpServers` 块。 |
 | **Windsurf** | `~/.codeium/windsurf/mcp_config.json` | 同样的 `mcpServers` 块。 |
-| **Gemini CLI** | `~/.gemini/settings.json` | `gemini mcp add agentmemory npx -y @agentmemory/mcp --scope user`(自动合并)。 |
+| **Gemini CLI** | `~/.gemini/settings.json` | `gemini mcp add agentmemory npx -y @ruby_sakura/mcp --scope user`(自动合并)。 |
 | **OpenClaw** | OpenClaw MCP 配置 | 同样的 `mcpServers` 块,或使用更深的[记忆插件](../integrations/openclaw/)。 |
-| **Codex CLI (仅 MCP)** | `.codex/config.toml` | TOML 形式:`codex mcp add agentmemory -- npx -y @agentmemory/mcp`,或手动添加 `[mcp_servers.agentmemory]`。 |
+| **Codex CLI (仅 MCP)** | `.codex/config.toml` | TOML 形式:`codex mcp add agentmemory -- npx -y @ruby_sakura/mcp`,或手动添加 `[mcp_servers.agentmemory]`。 |
 | **Codex CLI (完整插件)** | Codex 插件市场 | `codex plugin marketplace add rohitg00/agentmemory` 然后 `codex plugin add agentmemory@agentmemory`。注册 MCP + 6 个生命周期 hooks(SessionStart、UserPromptSubmit、PreToolUse、PostToolUse、PreCompact、Stop)+ 4 个 skills。在 Codex Desktop 上,直到 [openai/codex#16430](https://github.com/openai/codex/issues/16430) 落地之前,还要运行 `agentmemory connect codex --with-hooks` — 那里的插件 hooks 当前无响应。 |
-| **OpenCode (仅 MCP)** | `opencode.json` | 不同结构 — 顶层 `mcp` key,command 是数组:`{"mcp": {"agentmemory": {"type": "local", "command": ["npx", "-y", "@agentmemory/mcp"], "enabled": true}}}`。 |
+| **OpenCode (仅 MCP)** | `opencode.json` | 不同结构 — 顶层 `mcp` key,command 是数组:`{"mcp": {"agentmemory": {"type": "local", "command": ["npx", "-y", "@ruby_sakura/mcp"], "enabled": true}}}`。 |
 | **OpenCode (完整插件)** | `plugin/opencode/` | 22 个自动捕获 hooks,覆盖会话生命周期、消息、工具、错误。两个斜杠命令(`/recall`、`/remember`)。将 `plugin/opencode/` 复制到你的 OpenCode 工作空间并把插件条目添加到 `opencode.json`。完整 hook 表和差异分析见 [`plugin/opencode/README.md`](../plugin/opencode/README.md)。 |
 | **pi** | `~/.pi/agent/extensions/agentmemory` | 复制 [`integrations/pi`](../integrations/pi/) 并重启 pi。 |
 | **Hermes Agent** | `~/.hermes/config.yaml` | 使用更深的[记忆提供者插件](../integrations/hermes/),设置 `memory.provider: agentmemory`。 |
@@ -644,7 +644,7 @@ npx -y @ruby_sakura/agentmemory
 ```powershell
 npx -y @ruby_sakura/agentmemory mcp
 # 或通过 shim 包:
-npx -y @agentmemory/mcp
+npx -y @ruby_sakura/mcp
 ```
 
 **Windows 诊断:** 如果 `npx @ruby_sakura/agentmemory` 失败,加 `--verbose` 重新运行以看到实际的引擎 stderr。常见失败模式:
@@ -838,7 +838,7 @@ npm install @xenova/transformers
 
 53 个工具、6 个资源、3 个提示词、4 个 skills — 任何代理可用的最全面 MCP 记忆工具包。
 
-> **MCP shim 对比完整服务器:** 已发布的 `@agentmemory/mcp` 包是一个薄 shim。**只有当它能通过 `AGENTMEMORY_URL` 连通运行中的 agentmemory 服务器**(代理模式)时,才暴露完整的 51 工具表面。在没有可达服务器的情况下,shim 回退到 7 工具的本地集合(`memory_save`、`memory_recall`、`memory_smart_search`、`memory_sessions`、`memory_export`、`memory_audit`、`memory_governance_delete`)。`AGENTMEMORY_TOOLS=core|all` 环境变量是*服务器端*标志 — 在 shim 的 `env` 块中设置无效。如果在 Cursor / OpenCode / Gemini CLI 中只看到 7 个工具,启动 `npx @ruby_sakura/agentmemory`(或 Docker 栈)并设置 `AGENTMEMORY_URL=http://localhost:3111`。
+> **MCP shim 对比完整服务器:** 已发布的 `@ruby_sakura/mcp` 包是一个薄 shim。**只有当它能通过 `AGENTMEMORY_URL` 连通运行中的 agentmemory 服务器**(代理模式)时,才暴露完整的 51 工具表面。在没有可达服务器的情况下,shim 回退到 7 工具的本地集合(`memory_save`、`memory_recall`、`memory_smart_search`、`memory_sessions`、`memory_export`、`memory_audit`、`memory_governance_delete`)。`AGENTMEMORY_TOOLS=core|all` 环境变量是*服务器端*标志 — 在 shim 的 `env` 块中设置无效。如果在 Cursor / OpenCode / Gemini CLI 中只看到 7 个工具,启动 `npx @ruby_sakura/agentmemory`(或 Docker 栈)并设置 `AGENTMEMORY_URL=http://localhost:3111`。
 
 ### 51 个工具
 
@@ -922,7 +922,7 @@ npm install @xenova/transformers
 
 ```bash
 npx -y @ruby_sakura/agentmemory mcp   # 规范命令(始终可用)
-npx -y @agentmemory/mcp                # shim 包别名
+npx -y @ruby_sakura/mcp                # shim 包别名
 ```
 
 或添加到你的代理的 MCP 配置:
@@ -933,7 +933,7 @@ npx -y @agentmemory/mcp                # shim 包别名
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "http://localhost:3111"
       }
@@ -950,7 +950,7 @@ OpenCode (`opencode.json`):
   "mcp": {
     "agentmemory": {
       "type": "local",
-      "command": ["npx", "-y", "@agentmemory/mcp"],
+      "command": ["npx", "-y", "@ruby_sakura/mcp"],
       "enabled": true
     }
   },

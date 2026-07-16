@@ -39,8 +39,8 @@ At v1.0 this policy switches to a stated LTS window per the roadmap.
 In scope:
 
 - The `@ruby_sakura/agentmemory` server (REST + MCP surface, hook handlers, state store).
-- The `@agentmemory/mcp` standalone MCP server.
-- The `@agentmemory/fs-watcher` connector.
+- The `@ruby_sakura/mcp` standalone MCP server.
+- The `@ruby_sakura/fs-watcher` connector.
 - First-party integrations under `integrations/` (`hermes/`, `openclaw/`, `filesystem-watcher/`).
 - The Claude Code plugin under `plugin/`.
 
