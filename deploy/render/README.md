@@ -40,7 +40,7 @@ in the service settings. Future deploys are a single curl call:
 curl "https://api.render.com/deploy/srv-XXYYZZ?key=AABBCC"
 ```
 
-To pin a specific `@agentmemory/agentmemory` release, set the
+To pin a specific `@ruby_sakura/agentmemory` release, set the
 `AGENTMEMORY_VERSION` build arg in the service's *Environment* tab
 before the next deploy. Same for `III_VERSION`.
 

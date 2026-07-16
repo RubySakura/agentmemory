@@ -3,7 +3,7 @@
 Standalone MCP server for [agentmemory](https://github.com/rohitg00/agentmemory).
 
 This is a thin shim package that re-exposes the standalone MCP entrypoint from
-[`@agentmemory/agentmemory`](https://www.npmjs.com/package/@agentmemory/agentmemory),
+[`@ruby_sakura/agentmemory`](https://www.npmjs.com/package/@ruby_sakura/agentmemory),
 so MCP client configs that say `npx @agentmemory/mcp` work out of the box
 without installing the full package first.
 
@@ -26,12 +26,12 @@ Or wire it into your MCP client (Claude Desktop, OpenClaw, Cursor, Codex, etc.):
 }
 ```
 
-This package depends on `@agentmemory/agentmemory` and forwards to its
-`dist/standalone.mjs` entrypoint. If you already have `@agentmemory/agentmemory`
+This package depends on `@ruby_sakura/agentmemory` and forwards to its
+`dist/standalone.mjs` entrypoint. If you already have `@ruby_sakura/agentmemory`
 installed, you can call the same entrypoint directly:
 
 ```bash
-npx @agentmemory/agentmemory mcp
+npx @ruby_sakura/agentmemory mcp
 ```
 
 Both commands do the same thing.

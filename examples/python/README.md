@@ -19,7 +19,7 @@ Start the agentmemory daemon (defaults to `ws://localhost:49134`, REST on
 `:3111`):
 
 ```bash
-npx -y @agentmemory/agentmemory
+npx -y @ruby_sakura/agentmemory
 ```
 
 Then from Python:

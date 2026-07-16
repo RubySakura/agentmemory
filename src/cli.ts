@@ -210,12 +210,12 @@ Environment:
                                (default 30). Long values overcount, short values undercount.
 
 Quick start:
-  npx @agentmemory/agentmemory          # start with local iii-engine or Docker
-  npx @agentmemory/agentmemory demo     # see semantic recall in 30 seconds
-  npx @agentmemory/agentmemory doctor   # diagnose config + feature flags
-  npx @agentmemory/agentmemory status   # health + memory count + flags
-  npx @agentmemory/agentmemory upgrade  # upgrade agentmemory + iii runtime
-  npx @agentmemory/agentmemory mcp      # standalone MCP server (no engine)
+  npx @ruby_sakura/agentmemory          # start with local iii-engine or Docker
+  npx @ruby_sakura/agentmemory demo     # see semantic recall in 30 seconds
+  npx @ruby_sakura/agentmemory doctor   # diagnose config + feature flags
+  npx @ruby_sakura/agentmemory status   # health + memory count + flags
+  npx @ruby_sakura/agentmemory upgrade  # upgrade agentmemory + iii runtime
+  npx @ruby_sakura/agentmemory mcp      # standalone MCP server (no engine)
   npx @agentmemory/mcp                  # same as above (shim package)
 `);
   process.exit(0);
@@ -643,7 +643,7 @@ async function maybeOfferGlobalInstall(): Promise<void> {
   if (answer === false) {
     writePrefs({ skipGlobalInstall: true });
     p.log.info(
-      "Skipped. Re-run via `npx @agentmemory/agentmemory` or install later with: npm install -g @agentmemory/agentmemory",
+      "Skipped. Re-run via `npx @ruby_sakura/agentmemory` or install later with: npm install -g @ruby_sakura/agentmemory",
     );
     return;
   }
@@ -651,14 +651,14 @@ async function maybeOfferGlobalInstall(): Promise<void> {
   const npmBin = whichBinary("npm");
   if (!npmBin) {
     p.log.warn(
-      "npm not found on PATH. Install manually: npm install -g @agentmemory/agentmemory",
+      "npm not found on PATH. Install manually: npm install -g @ruby_sakura/agentmemory",
     );
     return;
   }
   const ok = runCommand(
     npmBin,
-    ["install", "-g", `@agentmemory/agentmemory@${VERSION}`],
-    { label: `Installing @agentmemory/agentmemory@${VERSION} globally` },
+    ["install", "-g", `@ruby_sakura/agentmemory@${VERSION}`],
+    { label: `Installing @ruby_sakura/agentmemory@${VERSION} globally` },
   );
   if (ok) {
     p.log.success(
@@ -669,7 +669,7 @@ async function maybeOfferGlobalInstall(): Promise<void> {
     writePrefs({ skipGlobalInstall: true });
   } else {
     p.log.warn(
-      "Global install failed. Try manually: npm install -g @agentmemory/agentmemory",
+      "Global install failed. Try manually: npm install -g @ruby_sakura/agentmemory",
     );
   }
 }
@@ -1086,12 +1086,12 @@ function installInstructions(): string[] {
       `     1. Open https://github.com/iii-hq/iii/releases/tag/iii%2Fv${IIPINNED_VERSION}`,
       `     2. Download iii-x86_64-pc-windows-msvc.zip (or iii-aarch64-pc-windows-msvc.zip on ARM)`,
       "     3. Extract iii.exe to %USERPROFILE%\\.local\\bin\\iii.exe (or add to PATH)",
-      "     4. Re-run: npx @agentmemory/agentmemory",
+      "     4. Re-run: npx @ruby_sakura/agentmemory",
       "",
       `  B) Docker: docker pull iiidev/iii:${IIPINNED_VERSION}`,
-      "     Re-run with AGENTMEMORY_USE_DOCKER=1 npx @agentmemory/agentmemory",
+      "     Re-run with AGENTMEMORY_USE_DOCKER=1 npx @ruby_sakura/agentmemory",
       "",
-      "Or skip the engine entirely (standalone MCP):  npx @agentmemory/agentmemory mcp",
+      "Or skip the engine entirely (standalone MCP):  npx @ruby_sakura/agentmemory mcp",
       "",
       "Docs: https://iii.dev/docs",
     ];
@@ -1103,12 +1103,12 @@ function installInstructions(): string[] {
     `agentmemory needs iii-engine v${IIPINNED_VERSION}. Pick one:`,
     "",
     linuxInstall,
-    "     Then re-run: npx @agentmemory/agentmemory",
+    "     Then re-run: npx @ruby_sakura/agentmemory",
     "",
     `  B) Docker: docker pull iiidev/iii:${IIPINNED_VERSION}`,
-    "     Re-run with AGENTMEMORY_USE_DOCKER=1 npx @agentmemory/agentmemory",
+    "     Re-run with AGENTMEMORY_USE_DOCKER=1 npx @ruby_sakura/agentmemory",
     "",
-    "Or skip the engine entirely (standalone MCP):  npx @agentmemory/agentmemory mcp",
+    "Or skip the engine entirely (standalone MCP):  npx @ruby_sakura/agentmemory mcp",
     "",
     "Docs: https://iii.dev/docs",
   ];
@@ -1185,7 +1185,7 @@ function printReadyHint(consoleState: IiiConsoleState): void {
   // dir was already on PATH in this shell), so we suggest the npx
   // form for them; everyone else gets the global form.
   const demoCommand = isInvokedViaNpx()
-    ? "npx @agentmemory/agentmemory demo"
+    ? "npx @ruby_sakura/agentmemory demo"
     : "agentmemory demo";
   process.stdout.write(`\n${c.dim("Try:")} ${c.cmd(demoCommand)}\n`);
 }
@@ -1265,7 +1265,7 @@ async function main() {
     // never sees this; only someone running their own iii does, and for them
     // "stop it, then run normally" is the fix. We do not suggest a different
     // engine version: agentmemory only supports v${IIPINNED_VERSION}.
-    const base = isInvokedViaNpx() ? "npx @agentmemory/agentmemory" : "agentmemory";
+    const base = isInvokedViaNpx() ? "npx @ruby_sakura/agentmemory" : "agentmemory";
     p.log.error(
       `Another iii-engine (${detectedLabel}) is running on port ${getEnginePort()}, and agentmemory needs its own pinned v${IIPINNED_VERSION}.`,
     );
@@ -1299,7 +1299,7 @@ async function main() {
     if (startupFailure?.kind === "no-docker-compose") {
       lines.unshift(
         "Docker is installed but docker-compose.yml is missing from this",
-        "install. Re-install with: npm install -g @agentmemory/agentmemory",
+        "install. Re-install with: npm install -g @ruby_sakura/agentmemory",
         "",
       );
     }
@@ -1390,7 +1390,7 @@ async function runStatus() {
   const up = await isEngineRunning();
   if (!up) {
     p.log.error(`Not running — no response at ${base}`);
-    p.log.info("Start with: npx @agentmemory/agentmemory");
+    p.log.info("Start with: npx @ruby_sakura/agentmemory");
     process.exit(1);
   }
 
@@ -1701,7 +1701,7 @@ async function passiveServerChecks(): Promise<DoctorCheck[]> {
     ok: serverUp,
     hint: serverUp
       ? undefined
-      : `Start with: npx @agentmemory/agentmemory (tried ${base})`,
+      : `Start with: npx @ruby_sakura/agentmemory (tried ${base})`,
   });
   if (!serverUp) return checks;
 
@@ -2129,7 +2129,7 @@ async function runInit() {
   const template = findEnvExample();
   if (!template) {
     p.log.error(
-      "Could not locate .env.example in the package. Re-install with: npm i -g @agentmemory/agentmemory",
+      "Could not locate .env.example in the package. Re-install with: npm i -g @ruby_sakura/agentmemory",
     );
     process.exit(1);
   }
@@ -2166,8 +2166,8 @@ async function runInit() {
       "",
       "Common next steps:",
       "  1. Pick an LLM provider key (ANTHROPIC_API_KEY / OPENAI_API_KEY / GEMINI_API_KEY / etc.)",
-      "  2. Run `npx @agentmemory/agentmemory doctor` to verify the daemon sees them",
-      "  3. Run `npx @agentmemory/agentmemory` to start the worker",
+      "  2. Run `npx @ruby_sakura/agentmemory doctor` to verify the daemon sees them",
+      "  3. Run `npx @ruby_sakura/agentmemory` to start the worker",
     ].join("\n"),
     "Next steps",
   );
@@ -2233,8 +2233,8 @@ async function runDemo() {
     p.log.error(
       `agentmemory worker not reachable on port ${port} (livez probe failed). Something may be on the port but it isn't serving /agentmemory/*.`,
     );
-    p.log.info("Start it with: npx @agentmemory/agentmemory");
-    p.log.info("Or run a one-command demo with: npx @agentmemory/agentmemory demo --serve");
+    p.log.info("Start it with: npx @ruby_sakura/agentmemory");
+    p.log.info("Or run a one-command demo with: npx @ruby_sakura/agentmemory demo --serve");
     process.exit(1);
   }
 
@@ -2509,7 +2509,7 @@ async function stopDockerEngine(composeFile: string, port: number): Promise<void
     );
     process.exit(1);
   }
-  p.outro("Stopped. Memories persisted to disk; restart anytime with: npx @agentmemory/agentmemory");
+  p.outro("Stopped. Memories persisted to disk; restart anytime with: npx @ruby_sakura/agentmemory");
 }
 
 async function runStop(): Promise<void> {
@@ -2642,7 +2642,7 @@ async function runStop(): Promise<void> {
     p.log.error("One or more processes survived SIGKILL. Investigate with `ps`.");
     process.exit(1);
   }
-  p.outro("Stopped. Memories persisted to disk; restart anytime with: npx @agentmemory/agentmemory");
+  p.outro("Stopped. Memories persisted to disk; restart anytime with: npx @ruby_sakura/agentmemory");
 }
 
 async function runMcp(): Promise<void> {
@@ -2716,7 +2716,7 @@ async function runImportJsonl(): Promise<void> {
   }
   if (!probeOk) {
     p.log.error(
-      `agentmemory livez probe failed on port ${port}: ${probeDetail}. Start it with \`npx @agentmemory/agentmemory\` in another terminal, then re-run this command.`,
+      `agentmemory livez probe failed on port ${port}: ${probeDetail}. Start it with \`npx @ruby_sakura/agentmemory\` in another terminal, then re-run this command.`,
     );
     process.exit(1);
   }
@@ -2968,7 +2968,7 @@ async function runRemove(): Promise<void> {
   }
 
   p.outro(
-    "Done. agentmemory cleanly removed. The npm package itself: npm uninstall -g @agentmemory/agentmemory",
+    "Done. agentmemory cleanly removed. The npm package itself: npm uninstall -g @ruby_sakura/agentmemory",
   );
 }
 

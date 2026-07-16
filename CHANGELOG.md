@@ -396,7 +396,7 @@ Two parallel waves landed back-to-back. (1) DevEx polish on top of v0.9.15's fou
 
 - **iii console install probe + auto-install** (PR #410). New `ensureIiiConsole()` checks for the iii-console binary on PATH or in `~/.local/bin`; if missing, prompts interactively to run `curl -fsSL https://install.iii.dev/console/main/install.sh | sh`. Console is first-class — not optional. On install acceptance the ready panel includes the binary's resolved path and a runnable launch hint (`<binPath> -p <port>`); on decline the panel surfaces the install one-liner.
 
-- **Interactive global-install prompt** (PR #410). Replaces the passive `p.log.info` npx hint with a `p.confirm` on first npx run that runs `npm install -g @agentmemory/agentmemory@<VERSION>` inline. Suppressible via `preferences.skipGlobalInstall` so we never ask twice. Closes the v0.9.15-era footgun where users typed `agentmemory stop` in a new shell and hit `command not found`.
+- **Interactive global-install prompt** (PR #410). Replaces the passive `p.log.info` npx hint with a `p.confirm` on first npx run that runs `npm install -g @ruby_sakura/agentmemory@<VERSION>` inline. Suppressible via `preferences.skipGlobalInstall` so we never ask twice. Closes the v0.9.15-era footgun where users typed `agentmemory stop` in a new shell and hit `command not found`.
 
 - **Onboarding wires selected agents inline** ([PR #408](https://github.com/rohitg00/agentmemory/pull/408)). After the multi-select agents step in `runOnboarding`, asks `Run \`agentmemory connect <agent>\` for each selected agent now? [Y/n]` and dispatches each through the existing `runAdapter` path used by the explicit `agentmemory connect` command. Successes + failures get bucketed in a summary block (`Wired: claude-code, codex, cursor · Skipped/failed: hermes (manual install required)`). Cancellation prints the explicit per-agent commands for the user to run later.
 
@@ -468,7 +468,7 @@ DevEx overhaul. Four PRs landed simultaneously rebuilding the first-run experien
 
 - **Engine version-mismatch warning** (PR #405). When the iii binary on PATH (or attached engine) is not the pinned `IIPINNED_VERSION` (currently v0.11.2), the CLI now prints a clearly-labelled `p.log.warn` with the override path (`AGENTMEMORY_III_VERSION=...` env var or downgrade curl one-liner). Pre-fix was silent acceptance — v0.11.6 on PATH led to undebuggable EPIPE loops.
 
-- **npx PATH hint** (PR #405). After the engine is ready, runs invoked via `npx` get one extra line: `Tip: install globally for the bare \`agentmemory\` command: npm install -g @agentmemory/agentmemory`. Suppressible via `preferences.skipNpxHint`.
+- **npx PATH hint** (PR #405). After the engine is ready, runs invoked via `npx` get one extra line: `Tip: install globally for the bare \`agentmemory\` command: npm install -g @ruby_sakura/agentmemory`. Suppressible via `preferences.skipNpxHint`.
 
 ### Fixed
 
@@ -483,19 +483,19 @@ DevEx overhaul. Four PRs landed simultaneously rebuilding the first-run experien
 
 ## [0.9.14] — 2026-05-15
 
-CLI bootstrap rework so `npx @agentmemory/agentmemory` stops failing on Rancher Desktop and other Docker-shim daemons. The native iii-engine binary is now the first-class start path; Docker becomes opt-in. Also ships `agentmemory stop` so engines started in the background can be torn down without `lsof | xargs kill`. README agents grid reorders OpenHuman next to the other native-integration agents.
+CLI bootstrap rework so `npx @ruby_sakura/agentmemory` stops failing on Rancher Desktop and other Docker-shim daemons. The native iii-engine binary is now the first-class start path; Docker becomes opt-in. Also ships `agentmemory stop` so engines started in the background can be torn down without `lsof | xargs kill`. README agents grid reorders OpenHuman next to the other native-integration agents.
 
 ### Added
 
 - **`agentmemory stop` command** ([PR #396](https://github.com/rohitg00/agentmemory/pull/396)). Reads `~/.agentmemory/iii.pid` first, falls back to `lsof -i :PORT -sTCP:LISTEN -t`, sends `SIGTERM`, waits 3s, escalates to `SIGKILL`. iii-engine doesn't currently handle `SIGTERM` cleanly so the SIGKILL escalation is what actually frees the port. State file (`~/.agentmemory/engine-state.json`) records whether the engine was started natively or via `docker compose up -d`, so `stop` runs `docker compose -f <file> down` for Docker engines instead of signaling the host's Docker socket proxy by accident.
 
-- **`AGENTMEMORY_USE_DOCKER=1` env var**. Opt-in path for users who want the bundled `docker-compose.yml` to keep handling iii-engine lifecycle. Without it, the CLI prefers the native binary in `~/.local/bin/iii`. Documented in `npx @agentmemory/agentmemory --help`.
+- **`AGENTMEMORY_USE_DOCKER=1` env var**. Opt-in path for users who want the bundled `docker-compose.yml` to keep handling iii-engine lifecycle. Without it, the CLI prefers the native binary in `~/.local/bin/iii`. Documented in `npx @ruby_sakura/agentmemory --help`.
 
 ### Changed
 
 - **`startEngine()` fallback order rewritten** ([PR #396](https://github.com/rohitg00/agentmemory/pull/396)). New tier order: (1) `iii` on PATH, (2) `~/.local/bin/iii` or other fallback paths, (3) interactive clack `p.select` with three choices — auto-install the pinned v0.11.2 binary, use Docker compose, or print manual install instructions and exit, (4) Docker compose only via explicit opt-in or the post-install failure fallback, (5) fail-loud with install instructions. CI / non-TTY environments auto-pick install. The Docker fallback was tier 2 and silently fired on every cold start; on Rancher Desktop `docker compose up -d` returns 0 even when the daemon's pull silently fails, which is what produced the "engine started but REST never responded" misdiagnoses we've been seeing this week.
 
-- **Installer logic extracted from `runUpgrade` into `runIiiInstaller()`**. Both first-run and `agentmemory upgrade` now share the same pinned-v0.11.2 curl-and-tar path. The pre-v0.9.14 installer only ran on `npx @agentmemory/agentmemory upgrade`, so first-time users never auto-installed.
+- **Installer logic extracted from `runUpgrade` into `runIiiInstaller()`**. Both first-run and `agentmemory upgrade` now share the same pinned-v0.11.2 curl-and-tar path. The pre-v0.9.14 installer only ran on `npx @ruby_sakura/agentmemory upgrade`, so first-time users never auto-installed.
 
 - **`installInstructions()` copy reordered**. The curl one-liner now leads (path A), Docker is path B with the `AGENTMEMORY_USE_DOCKER=1` env-var hint. The historical "Why pinned" rationale moved out of the failure note (it's still in the source comment for anyone debugging the pin choice).
 
@@ -521,7 +521,7 @@ Six PRs landed since v0.9.12 — `.env.example` discovery shipped (#372), CJK BM
 
 ### Added
 
-- **`.env.example` at repo root + bundled in the npm tarball** ([#372](https://github.com/rohitg00/agentmemory/issues/372), closes [#47](https://github.com/rohitg00/agentmemory/issues/47), [#293](https://github.com/rohitg00/agentmemory/issues/293), partial [#233](https://github.com/rohitg00/agentmemory/issues/233)). Every env var actually read by `src/` is now documented in one place, grouped by surface (LLM provider, embedding provider, auth, search tuning, behaviour flags, CLI runtime, ports, iii engine pin, Claude Code bridge, Obsidian export). Every line is commented out by default so the file ships as a config template, not a config. The npm package now lists `.env.example` in its `files` field so `npm i -g @agentmemory/agentmemory` carries it.
+- **`.env.example` at repo root + bundled in the npm tarball** ([#372](https://github.com/rohitg00/agentmemory/issues/372), closes [#47](https://github.com/rohitg00/agentmemory/issues/47), [#293](https://github.com/rohitg00/agentmemory/issues/293), partial [#233](https://github.com/rohitg00/agentmemory/issues/233)). Every env var actually read by `src/` is now documented in one place, grouped by surface (LLM provider, embedding provider, auth, search tuning, behaviour flags, CLI runtime, ports, iii engine pin, Claude Code bridge, Obsidian export). Every line is commented out by default so the file ships as a config template, not a config. The npm package now lists `.env.example` in its `files` field so `npm i -g @ruby_sakura/agentmemory` carries it.
 
 - **`agentmemory init` command**. Copies the bundled `.env.example` to `~/.agentmemory/.env` if that file doesn't already exist; refuses to overwrite an existing config and prints a diff command pointing at the latest template. Wired into the CLI help block alongside `status` / `doctor` / `demo` / `upgrade` / `mcp` / `import-jsonl`.
 
@@ -531,7 +531,7 @@ Six PRs landed since v0.9.12 — `.env.example` discovery shipped (#372), CJK BM
 
 - **`benchmark/load-100k.ts` load harness** ([#346](https://github.com/rohitg00/agentmemory/issues/346), PR [#363](https://github.com/rohitg00/agentmemory/pull/363)). Hand-rolled, dependency-free harness that seeds N synthetic memories against a local daemon at `http://localhost:3111` and records p50 / p90 / p99 latency + throughput for `POST /agentmemory/remember`, `POST /agentmemory/smart-search`, and `GET /agentmemory/memories?latest=true` across the matrix N ∈ {1k, 10k, 100k} × concurrency C ∈ {1, 10, 100}. Content drawn from a seedable `mulberry32` PRNG so re-running against the same build produces the same seed corpus. Results land in `benchmark/results/load-100k-<short-git-sha>.json`. Wired as `npm run bench:load`.
 
-- **One-click deploy templates** for fly.io, Railway, Render, and Coolify ([#343](https://github.com/rohitg00/agentmemory/issues/343), PR [#361](https://github.com/rohitg00/agentmemory/pull/361)). Each template under `deploy/<platform>/` ships a multi-stage Dockerfile that `COPY --from=iiidev/iii:0.11.2`s the engine binary into a `node:22-slim` runtime, npm-installs `@agentmemory/agentmemory` under `/opt/agentmemory` with `iii-sdk` pinned via `package.json` overrides (avoids the caret-resolves-to-0.11.6 drift), and runs an entrypoint that rewrites the bundled `iii-config.yaml` to bind `0.0.0.0` + use absolute `/data` paths, chowns the platform-mounted volume to `node:node` via `gosu`, generates a first-boot HMAC secret, and exec's the agentmemory CLI as the unprivileged `node` user under `tini` (with `TINI_SUBREAPER=1`). Verified end-to-end on fly.io (machine in `iad`, 1 GB volume, healthcheck passing).
+- **One-click deploy templates** for fly.io, Railway, Render, and Coolify ([#343](https://github.com/rohitg00/agentmemory/issues/343), PR [#361](https://github.com/rohitg00/agentmemory/pull/361)). Each template under `deploy/<platform>/` ships a multi-stage Dockerfile that `COPY --from=iiidev/iii:0.11.2`s the engine binary into a `node:22-slim` runtime, npm-installs `@ruby_sakura/agentmemory` under `/opt/agentmemory` with `iii-sdk` pinned via `package.json` overrides (avoids the caret-resolves-to-0.11.6 drift), and runs an entrypoint that rewrites the bundled `iii-config.yaml` to bind `0.0.0.0` + use absolute `/data` paths, chowns the platform-mounted volume to `node:node` via `gosu`, generates a first-boot HMAC secret, and exec's the agentmemory CLI as the unprivileged `node` user under `tini` (with `TINI_SUBREAPER=1`). Verified end-to-end on fly.io (machine in `iad`, 1 GB volume, healthcheck passing).
 
 - **`examples/python/`** quickstart + observation/recall flow showing `iii-sdk` (Python) calling `mem::remember` / `mem::smart-search` / `mem::context` directly over `ws://localhost:49134` ([#342](https://github.com/rohitg00/agentmemory/issues/342), PR [#364](https://github.com/rohitg00/agentmemory/pull/364)). Replaces a duplicate-transport Python REST client (initial PR #360, closed) with a single-SDK story — the same `iii-sdk` install (`pip install iii-sdk` / `cargo add iii-sdk` / `npm install iii-sdk`) talks to every agentmemory function from any language.
 
@@ -711,7 +711,7 @@ If you've been seeing `memory_smart_search` return empty results for memories yo
 
 If you're upgrading from <0.9.5 and have an existing vector index on disk, the new dim-guard will refuse to load if your active embedding provider declares a different dimension than what's persisted. This is the intended safe default — set `AGENTMEMORY_DROP_STALE_INDEX=true` to discard and rebuild from live observations, or re-embed against the new provider before starting.
 
-If you've been on `iii-engine` v0.11.6 and noticed search returning empty after save, install agentmemory 0.9.5 fresh (or run `npx @agentmemory/agentmemory upgrade`) to pull pinned engine v0.11.2. v0.11.6 brings a new sandbox-everything-via-`iii worker add` model that agentmemory hasn't been refactored for yet — that work is tracked as a follow-up; this release just keeps existing users unblocked.
+If you've been on `iii-engine` v0.11.6 and noticed search returning empty after save, install agentmemory 0.9.5 fresh (or run `npx @ruby_sakura/agentmemory upgrade`) to pull pinned engine v0.11.2. v0.11.6 brings a new sandbox-everything-via-`iii worker add` model that agentmemory hasn't been refactored for yet — that work is tracked as a follow-up; this release just keeps existing users unblocked.
 
 [0.9.6]: https://github.com/rohitg00/agentmemory/compare/v0.9.5...v0.9.6
 [0.9.5]: https://github.com/rohitg00/agentmemory/compare/v0.9.4...v0.9.5
@@ -739,12 +739,12 @@ Developer-experience patch. Every disabled feature flag is now visible in the vi
 - **`agentmemory doctor` command.** Runs 10 diagnostic checks in one shot: server reachability, health status, viewer port, LLM provider, embedding provider, four feature flag states, and whether the knowledge graph has data. Every failing check includes a concrete hint with the exact env var or command to fix it. Mirrors the shape of the new viewer feature-flag banners.
 - **`/agentmemory/config/flags` REST endpoint.** Returns `{ version, provider, embeddingProvider, flags[] }` with per-flag `{ key, label, enabled, default, affects, needsLlm, description, enableHow, docsHref }`. Used by the viewer banner, CLI status/doctor, and anyone who wants to introspect config without parsing logs.
 - **Viewer feature-flag banner system.** Compact collapsible summary row at the top of every tab (`⚠ 3 off · ⚙ 1 note · Feature flags — click to expand`). Expanded view shows per-flag card with description, exact enable command, docs link, and dismiss button. Dismissed state persists per-flag in localStorage so banners stay out of the way once acknowledged. Banners filter by the current tab's `affects` list.
-- **Viewer first-run hero card.** When `sessions.length === 0`, dashboard renders an orange-accent card titled "First run → magical moment in 10 seconds" with `npx @agentmemory/agentmemory demo` as the next step. Removes the dead-empty dashboard that used to greet fresh installs.
+- **Viewer first-run hero card.** When `sessions.length === 0`, dashboard renders an orange-accent card titled "First run → magical moment in 10 seconds" with `npx @ruby_sakura/agentmemory demo` as the next step. Removes the dead-empty dashboard that used to greet fresh installs.
 - **Viewer footer with preset issue report.** `agentmemory viewer · v{version} · github · docs · report issue →`. The feedback link opens a GitHub issue pre-filled with version, provider name, embedding provider, flag state, and user-agent — so the first message on an issue already contains the diagnostic context that used to take three back-and-forths.
 - **Richer empty states on Actions, Memories, Lessons, Crystals tabs.** Each now has a titled lead explaining what the tab is for, why it's empty, three concrete ways to populate it (MCP tool, curl, hook), and a docs link. The old one-liners ("No actions yet. Create actions via memory_action_create MCP tool") assumed too much context.
 - **`status` command shows flag state.** New section in the output block lists provider (`✓ llm` / `✗ noop`), embedding provider (`✓ embeddings` / `bm25-only`), and each flag with a tick/cross. Parity with the viewer banner.
 - **`AGENTMEMORY_URL` environment variable honored by CLI.** `status`, `doctor`, and related health checks now respect `AGENTMEMORY_URL=http://host:port` and extract the port from it. Previously documented but silently ignored; `--port N` was the only way to override.
-- **Website install section promotes `demo` to step 2.** `npx @agentmemory/agentmemory demo` now appears between "start server" and "open viewer" on agent-memory.dev. The magical-moment command is on the critical path of the three-step install, not tucked into the README.
+- **Website install section promotes `demo` to step 2.** `npx @ruby_sakura/agentmemory demo` now appears between "start server" and "open viewer" on agent-memory.dev. The magical-moment command is on the critical path of the three-step install, not tucked into the README.
 - **Website version auto-derived from repo package.json.** `gen-meta.mjs` picks up `src/version.ts` on `prebuild` and writes `website/lib/generated-meta.json`. Removes the stale-version drift that showed `v0.9.1` on the landing page after `v0.9.2` shipped.
 
 ### Changed
@@ -983,7 +983,7 @@ One-line fix for a brown-paper-bag bug reported in [#136](https://github.com/roh
 
 ### Fixed
 
-- **`npx @agentmemory/agentmemory` no longer crashes with "`/app/config.yaml` is a directory"** ([#136](https://github.com/rohitg00/agentmemory/issues/136), thanks [@stefano-medapps](https://github.com/stefano-medapps)) — the published tarball shipped `docker-compose.yml` but **not** `iii-config.docker.yaml`, even though the compose file mounts `./iii-config.docker.yaml:/app/config.yaml:ro`. Docker resolves missing host-path bind sources by silently creating them as empty directories, so the iii-engine container mounted an empty dir at `/app/config.yaml` and crashed with `Error: Failed to read config file '/app/config.yaml': Is a directory (os error 21)`. The `files` array in `package.json` now includes `iii-config.docker.yaml` alongside the regular `iii-config.yaml`.
+- **`npx @ruby_sakura/agentmemory` no longer crashes with "`/app/config.yaml` is a directory"** ([#136](https://github.com/rohitg00/agentmemory/issues/136), thanks [@stefano-medapps](https://github.com/stefano-medapps)) — the published tarball shipped `docker-compose.yml` but **not** `iii-config.docker.yaml`, even though the compose file mounts `./iii-config.docker.yaml:/app/config.yaml:ro`. Docker resolves missing host-path bind sources by silently creating them as empty directories, so the iii-engine container mounted an empty dir at `/app/config.yaml` and crashed with `Error: Failed to read config file '/app/config.yaml': Is a directory (os error 21)`. The `files` array in `package.json` now includes `iii-config.docker.yaml` alongside the regular `iii-config.yaml`.
 
 ### Infrastructure
 
@@ -1003,7 +1003,7 @@ Finishes the `npx <shim>` story from #120 by moving the standalone package under
 
 ### Fixed
 
-- **Shim version bump was missed in 0.8.5** — `packages/agentmemory-mcp/package.json` (now `packages/mcp/package.json`) was still pinned at `0.8.4` because the release bump script only touched the 8 files in the main package. The shim now tracks the main package and depends on `@agentmemory/agentmemory: ~0.8.6`.
+- **Shim version bump was missed in 0.8.5** — `packages/agentmemory-mcp/package.json` (now `packages/mcp/package.json`) was still pinned at `0.8.4` because the release bump script only touched the 8 files in the main package. The shim now tracks the main package and depends on `@ruby_sakura/agentmemory: ~0.8.6`.
 
 [0.8.6]: https://github.com/rohitg00/agentmemory/compare/v0.8.5...v0.8.6
 
@@ -1038,9 +1038,9 @@ Two bug fixes reported in the public issue tracker.
 ### Fixed
 
 - **Retention score now reflects real agent-side reads** ([#119](https://github.com/rohitg00/agentmemory/issues/119)) — `mem::retention-score` previously hardcoded `accessCount = 0` and `accessTimestamps = []` for episodic memories, and only used a single-sample `lastAccessedAt` for semantic memories. Reads from `mem::search`, `mem::smart-search`, `mem::context`, `mem::timeline`, `mem::file-context`, and the matching MCP tools (`memory_recall`, `memory_smart_search`, `memory_timeline`, `memory_file_history`) were never recorded, so the time-frequency decay formula was a dead path. The reinforcement boost is now driven by a real per-memory access log persisted at `mem:access`, written by every read endpoint (fire-and-forget, so reads never block on tracker writes), with a bounded ring buffer of the last 20 access timestamps. Pre-0.8.3 semantic memories that only have the legacy `lastAccessedAt` field still score correctly via a backwards-compat fallback.
-- **`npx agentmemory-mcp` 404** ([#120](https://github.com/rohitg00/agentmemory/issues/120)) — the README told users to run `npx agentmemory-mcp` for MCP client setup, but `agentmemory-mcp` was only a `bin` entry inside `@agentmemory/agentmemory`, not a real package, so `npx` returned 404 from the npm registry. Two fixes:
-  - Published a new sibling package `agentmemory-mcp` (in `packages/agentmemory-mcp/`) that is a thin shim over `@agentmemory/agentmemory/dist/standalone.mjs`. `npx agentmemory-mcp` now works as documented.
-  - Added a canonical `npx @agentmemory/agentmemory mcp` subcommand to the main CLI for users who already have `@agentmemory/agentmemory` installed and don't want a second package on disk. Both commands do the same thing.
+- **`npx agentmemory-mcp` 404** ([#120](https://github.com/rohitg00/agentmemory/issues/120)) — the README told users to run `npx agentmemory-mcp` for MCP client setup, but `agentmemory-mcp` was only a `bin` entry inside `@ruby_sakura/agentmemory`, not a real package, so `npx` returned 404 from the npm registry. Two fixes:
+  - Published a new sibling package `agentmemory-mcp` (in `packages/agentmemory-mcp/`) that is a thin shim over `@ruby_sakura/agentmemory/dist/standalone.mjs`. `npx agentmemory-mcp` now works as documented.
+  - Added a canonical `npx @ruby_sakura/agentmemory mcp` subcommand to the main CLI for users who already have `@ruby_sakura/agentmemory` installed and don't want a second package on disk. Both commands do the same thing.
   - README install snippets now use `npx -y agentmemory-mcp` so first-time users skip the install confirmation prompt.
 
 ### Added
@@ -1048,7 +1048,7 @@ Two bug fixes reported in the public issue tracker.
 - **Concurrent access tracking is race-safe** — the access log RMW is wrapped in the existing `withKeyedLock` keyed mutex, so two parallel reads of the same memory don't lose increments. `recordAccessBatch` uses `Promise.allSettled` so a slow keyed-lock acquisition on one id doesn't block the rest of the batch.
 - **`mem::export` / `mem::import` now round-trip the access log** — the new `mem:access` namespace is included in dumps and restored on import, so backup/restore cycles no longer silently zero out reinforcement signals.
 - **`exports` field in `package.json`** — explicitly exposes `./dist/standalone.mjs` as a subpath so the shim package and external consumers have a stable contract.
-- **CI publishes both packages on release** — `.github/workflows/publish.yml` now publishes `@agentmemory/agentmemory` first, then the `agentmemory-mcp` shim from `packages/agentmemory-mcp/` so `npx agentmemory-mcp` works on the live release.
+- **CI publishes both packages on release** — `.github/workflows/publish.yml` now publishes `@ruby_sakura/agentmemory` first, then the `agentmemory-mcp` shim from `packages/agentmemory-mcp/` so `npx agentmemory-mcp` works on the live release.
 
 ## [0.8.2] — 2026-04-12
 

@@ -72,7 +72,7 @@ export function MobileNavToggle({
             GITHUB · {formatCompact(stars)}★
           </a>
           <a
-            href="https://www.npmjs.com/package/@agentmemory/agentmemory"
+            href="https://www.npmjs.com/package/@ruby_sakura/agentmemory"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setOpen(false)}

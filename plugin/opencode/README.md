@@ -22,7 +22,7 @@
 ### 1. Start the agentmemory server
 
 ```bash
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 ```
 
 The server starts on `http://localhost:3111`.

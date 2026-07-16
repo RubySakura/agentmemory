@@ -3,7 +3,7 @@
 import { useState } from "react";
 import styles from "./HeroNpxCommand.module.css";
 
-const CMD = "npx @agentmemory/agentmemory";
+const CMD = "npx @ruby_sakura/agentmemory";
 
 export function HeroNpxCommand() {
   const [copied, setCopied] = useState(false);

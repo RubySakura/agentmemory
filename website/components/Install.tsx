@@ -13,7 +13,7 @@ interface Cmd {
 const SIMPLE: Cmd[] = [
   {
     label: "1. INSTALL ONCE",
-    cmd: "npm install -g @agentmemory/agentmemory",
+    cmd: "npm install -g @ruby_sakura/agentmemory",
     hint: "PUTS `agentmemory` ON YOUR PATH · STEPS 2/3 NEED THIS",
   },
   {
@@ -30,7 +30,7 @@ const SIMPLE: Cmd[] = [
 
 const NPX_FALLBACK: Cmd = {
   label: "PREFER ZERO-INSTALL? USE NPX",
-  cmd: "npx @agentmemory/agentmemory",
+  cmd: "npx @ruby_sakura/agentmemory",
   hint: "REPLACES STEPS 1+2 · USES NPX CACHE — SEE README FOR CAVEAT",
 };
 
@@ -98,7 +98,7 @@ export function Install() {
         </a>
         <a
           className="btn btn--ghost"
-          href="https://www.npmjs.com/package/@agentmemory/agentmemory"
+          href="https://www.npmjs.com/package/@ruby_sakura/agentmemory"
           target="_blank"
           rel="noopener"
         >

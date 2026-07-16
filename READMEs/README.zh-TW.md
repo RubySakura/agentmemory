@@ -48,7 +48,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@agentmemory/agentmemory"><img src="https://img.shields.io/npm/v/@agentmemory/agentmemory?color=CB3837&label=npm&style=for-the-badge&logo=npm" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@ruby_sakura/agentmemory"><img src="https://img.shields.io/npm/v/@ruby_sakura/agentmemory?color=CB3837&label=npm&style=for-the-badge&logo=npm" alt="npm version" /></a>
   <a href="https://github.com/rohitg00/agentmemory/actions"><img src="https://img.shields.io/github/actions/workflow/status/rohitg00/agentmemory/ci.yml?label=tests&style=for-the-badge&logo=github" alt="CI" /></a>
   <a href="https://github.com/rohitg00/agentmemory/blob/main/LICENSE"><img src="https://img.shields.io/github/license/rohitg00/agentmemory?color=blue&style=for-the-badge" alt="License" /></a>
   <a href="https://github.com/rohitg00/agentmemory/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/agentmemory?style=for-the-badge&color=yellow&logo=github" alt="Stars" /></a>
@@ -87,9 +87,9 @@
 ## 安裝
 
 ```bash
-npm install -g @agentmemory/agentmemory          # 一次安裝 — 全域可用 `agentmemory` 指令
+npm install -g @ruby_sakura/agentmemory          # 一次安裝 — 全域可用 `agentmemory` 指令
 # 如果在 macOS/Linux 的系統 Node 上遇到 EACCES,請重試:
-# sudo npm install -g @agentmemory/agentmemory
+# sudo npm install -g @ruby_sakura/agentmemory
 agentmemory                                      # 在 :3111 啟動記憶伺服器
 agentmemory demo                                 # 注入範例會話並驗證召回
 agentmemory connect claude-code                  # 連接你的代理(也支援: codex, cursor, gemini-cli, ...)
@@ -98,10 +98,10 @@ agentmemory connect claude-code                  # 連接你的代理(也支援:
 或透過 `npx`(無需安裝):
 
 ```bash
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 ```
 
-提醒 — npx 會依版本快取。若裸 `npx @agentmemory/agentmemory` 指令執行的是舊版,強制使用最新版 `npx -y @agentmemory/agentmemory@latest`,或一次性清除快取 `rm -rf ~/.npm/_npx`(macOS/Linux;Windows 上刪除 `%LOCALAPPDATA%\npm-cache\_npx`)。從 v0.9.16+ 起,首次 npx 執行會以行內方式提示你全域安裝,之後裸 `agentmemory` 指令在任何地方都能用。
+提醒 — npx 會依版本快取。若裸 `npx @ruby_sakura/agentmemory` 指令執行的是舊版,強制使用最新版 `npx -y @ruby_sakura/agentmemory@latest`,或一次性清除快取 `rm -rf ~/.npm/_npx`(macOS/Linux;Windows 上刪除 `%LOCALAPPDATA%\npm-cache\_npx`)。從 v0.9.16+ 起,首次 npx 執行會以行內方式提示你全域安裝,之後裸 `agentmemory` 指令在任何地方都能用。
 
 完整選項見下方[快速開始](#quick-start)。各代理具體接入見[支援所有代理](#works-with-every-agent)。
 
@@ -209,7 +209,7 @@ agentmemory 相容任何支援 hooks、MCP 或 REST API 的代理。所有代理
 **改變了什麼:** 會話 1 你設定了 JWT 驗證。會話 2 你要求限流。代理已經知道你的驗證使用 `src/middleware/auth.ts` 中的 jose middleware,測試覆蓋了 token 驗證,你選擇 jose 而非 jsonwebtoken 是為了 Edge 相容性。無需重新解釋。無需複製貼上。代理就是*知道*。
 
 ```bash
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 ```
 
 > **v0.9.0 新功能** — 著陸頁 [agent-memory.dev](https://agent-memory.dev) 上線,檔案系統連接器(`@agentmemory/fs-watcher`),獨立 MCP 現在代理至執行中的伺服器,使 hooks 和檢視器保持一致,稽核策略在所有刪除路徑上得到統一,健康狀態在小型 Node 行程上不再誤報 `memory_critical`。完整變更見 [CHANGELOG.md](../CHANGELOG.md#090--2026-04-18)。
@@ -363,10 +363,10 @@ npx @agentmemory/agentmemory
 
 ```bash
 # 終端 1:啟動伺服器
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 
 # 終端 2:注入範例資料並查看召回
-npx @agentmemory/agentmemory demo
+npx @ruby_sakura/agentmemory demo
 ```
 
 `demo` 會注入 3 個真實會話(JWT 驗證、N+1 查詢修正、限流)並對它們執行語義搜尋。你將看到搜尋「資料庫效能最佳化」時找到「N+1 查詢修正」 — 關鍵字比對做不到這一點。
@@ -375,12 +375,12 @@ npx @agentmemory/agentmemory demo
 
 ### 推薦:全域安裝
 
-`npx` 依版本快取。若你上週執行過 `npx @agentmemory/agentmemory@0.9.14`,裸 `npx @agentmemory/agentmemory` 指令可能會從 `~/.npm/_npx/` 提供過期的 0.9.14 而非最新版。安裝一次後,裸 `agentmemory` 指令處處可用:
+`npx` 依版本快取。若你上週執行過 `npx @ruby_sakura/agentmemory@0.9.14`,裸 `npx @ruby_sakura/agentmemory` 指令可能會從 `~/.npm/_npx/` 提供過期的 0.9.14 而非最新版。安裝一次後,裸 `agentmemory` 指令處處可用:
 
 ```bash
-npm install -g @agentmemory/agentmemory
+npm install -g @ruby_sakura/agentmemory
 # 如果在 macOS/Linux 的系統 Node 上遇到 EACCES,請重試:
-# sudo npm install -g @agentmemory/agentmemory
+# sudo npm install -g @ruby_sakura/agentmemory
 agentmemory                    # 啟動伺服器(等同 npx 形式)
 agentmemory stop               # 停止
 agentmemory remove             # 解除安裝所有建立的內容
@@ -391,8 +391,8 @@ agentmemory doctor             # 互動式診斷 + 修復提示
 從 v0.9.16 開始,首次 npx 執行會以行內方式提示你全域安裝 — 回答一次 `Y` 即可。若你跳過,可使用以下任一方式取得最新版本:
 
 ```bash
-npx -y @agentmemory/agentmemory@latest                 # 強制從 npm 拉取最新(跨平台)
-rm -rf ~/.npm/_npx && npx @agentmemory/agentmemory     # 僅 macOS/Linux (POSIX shell)
+npx -y @ruby_sakura/agentmemory@latest                 # 強制從 npm 拉取最新(跨平台)
+rm -rf ~/.npm/_npx && npx @ruby_sakura/agentmemory     # 僅 macOS/Linux (POSIX shell)
 ```
 
 在 Windows / PowerShell 上,等價的快取清除指令是 `Remove-Item -Recurse -Force "$env:LOCALAPPDATA\npm-cache\_npx"` — 上面的 `npx -y ...@latest` 形式是跨平台選項。
@@ -405,10 +405,10 @@ agentmemory 紀錄的每個會話都可重播。打開檢視器,選擇 **Replay*
 
 ```bash
 # 匯入預設 ~/.claude/projects 下的全部內容
-npx @agentmemory/agentmemory import-jsonl
+npx @ruby_sakura/agentmemory import-jsonl
 
 # 或匯入單一檔案
-npx @agentmemory/agentmemory import-jsonl ~/.claude/projects/-my-project/abc123.jsonl
+npx @ruby_sakura/agentmemory import-jsonl ~/.claude/projects/-my-project/abc123.jsonl
 ```
 
 匯入的會話與原生會話一同出現在 Replay 選擇器中。底層每個條目都透過 `mem::replay::load`、`mem::replay::sessions`、`mem::replay::import-jsonl` 這些 iii 函式路由 — 沒有側通道伺服器。
@@ -418,7 +418,7 @@ npx @agentmemory/agentmemory import-jsonl ~/.claude/projects/-my-project/abc123.
 當你確實想更新本地執行階段時,使用維護指令:
 
 ```bash
-npx @agentmemory/agentmemory upgrade
+npx @ruby_sakura/agentmemory upgrade
 ```
 
 警告:此指令會變更目前工作區/執行階段。它可能更新 JavaScript 相依,並拉取固定版本的 Docker 鏡像 `iiidev/iii:0.11.2`。它絕不會安裝未固定版本或更新的 iii 引擎。
@@ -428,7 +428,7 @@ npx @agentmemory/agentmemory upgrade
 ### Claude Code(一段話,直接貼上)
 
 ```text
-Install agentmemory: run `npx @agentmemory/agentmemory` in a separate terminal to start the memory server. Then run `/plugin marketplace add rohitg00/agentmemory` and `/plugin install agentmemory` — the plugin registers all 12 hooks, 4 skills, AND auto-wires the `@agentmemory/mcp` stdio server via its `.mcp.json`, so you get 53 MCP tools (memory_smart_search, memory_save, memory_sessions, memory_governance_delete, etc.) without any extra config step. Verify with `curl http://localhost:3111/agentmemory/health`. The real-time viewer is at http://localhost:3113.
+Install agentmemory: run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server. Then run `/plugin marketplace add rohitg00/agentmemory` and `/plugin install agentmemory` — the plugin registers all 12 hooks, 4 skills, AND auto-wires the `@agentmemory/mcp` stdio server via its `.mcp.json`, so you get 53 MCP tools (memory_smart_search, memory_save, memory_sessions, memory_governance_delete, etc.) without any extra config step. Verify with `curl http://localhost:3111/agentmemory/health`. The real-time viewer is at http://localhost:3113.
 ```
 
 #### Claude Code 不安裝外掛(MCP-standalone 路徑)
@@ -441,7 +441,7 @@ Install agentmemory: run `npx @agentmemory/agentmemory` in a separate terminal t
 agentmemory connect claude-code --with-hooks
 ```
 
-這會把同樣的 hook 指令合併到 `~/.claude/settings.json`,絕對路徑解析到目前安裝的 `@agentmemory/agentmemory` 套件的 `plugin/` 目錄。升級 agentmemory 後重新執行該指令以重新整理路徑。同一檔案中的使用者條目會被保留;只取代之前的 agentmemory 條目。仍然推薦使用 `/plugin install` 路徑。
+這會把同樣的 hook 指令合併到 `~/.claude/settings.json`,絕對路徑解析到目前安裝的 `@ruby_sakura/agentmemory` 套件的 `plugin/` 目錄。升級 agentmemory 後重新執行該指令以重新整理路徑。同一檔案中的使用者條目會被保留;只取代之前的 agentmemory 條目。仍然推薦使用 `/plugin install` 路徑。
 
 對於遠端或受保護的部署,啟動 Claude Code 時設定 `AGENTMEMORY_URL` 和 `AGENTMEMORY_SECRET`。外掛會把這兩個值傳遞給其捆綁的 MCP 伺服器;當 `AGENTMEMORY_URL` 為空時,MCP shim 預設使用 `http://localhost:3111`。
 
@@ -449,7 +449,7 @@ agentmemory connect claude-code --with-hooks
 
 ```bash
 # 1. 在另一個終端啟動記憶伺服器
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 
 # 2. 註冊 agentmemory 市集並安裝外掛
 codex plugin marketplace add rohitg00/agentmemory
@@ -480,7 +480,7 @@ agentmemory connect codex --with-hooks
 <summary><b>OpenClaw(貼上此提示)</b></summary>
 
 ```text
-Install agentmemory for OpenClaw. Run `npx @agentmemory/agentmemory` in a separate terminal to start the memory server on localhost:3111. Then add this to my OpenClaw MCP config so agentmemory is available with all 51 memory tools:
+Install agentmemory for OpenClaw. Run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server on localhost:3111. Then add this to my OpenClaw MCP config so agentmemory is available with all 51 memory tools:
 
 {
   "mcpServers": {
@@ -505,7 +505,7 @@ Restart OpenClaw. Verify with `curl http://localhost:3111/agentmemory/health`. O
 <summary><b>Hermes Agent(貼上此提示)</b></summary>
 
 ```text
-Install agentmemory for Hermes. Run `npx @agentmemory/agentmemory` in a separate terminal to start the memory server on localhost:3111. Then add this to ~/.hermes/config.yaml so Hermes can use agentmemory as an MCP server with all 51 memory tools:
+Install agentmemory for Hermes. Run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server on localhost:3111. Then add this to ~/.hermes/config.yaml so Hermes can use agentmemory as an MCP server with all 51 memory tools:
 
 mcp_servers:
   agentmemory:
@@ -524,7 +524,7 @@ Verify with `curl http://localhost:3111/agentmemory/health`. Open http://localho
 
 ### 其他代理
 
-啟動記憶伺服器:`npx @agentmemory/agentmemory`
+啟動記憶伺服器:`npx @ruby_sakura/agentmemory`
 
 在使用 `mcpServers` 結構的每個宿主(Cursor、Claude Desktop、Cline、Roo Code、Windsurf、Gemini CLI、OpenClaw)中,agentmemory 條目是**相同的 MCP 伺服器區塊**:
 
@@ -627,7 +627,7 @@ iii --version
 # 應輸出:0.11.2
 
 # 5. 然後照常執行 agentmemory:
-npx -y @agentmemory/agentmemory
+npx -y @ruby_sakura/agentmemory
 ```
 
 **選項 B — Docker Desktop:**
@@ -636,18 +636,18 @@ npx -y @agentmemory/agentmemory
 # 1. 安裝 Docker Desktop for Windows
 # 2. 啟動 Docker Desktop 並確保引擎執行中
 # 3. 執行 agentmemory — 它會自動啟動捆綁的 compose 檔:
-npx -y @agentmemory/agentmemory
+npx -y @ruby_sakura/agentmemory
 ```
 
 **選項 C — 僅獨立 MCP(無引擎):** 若你只需要 MCP 工具供代理使用,不需要 REST API、檢視器或定時工作,則完全跳過引擎:
 
 ```powershell
-npx -y @agentmemory/agentmemory mcp
+npx -y @ruby_sakura/agentmemory mcp
 # 或透過 shim 套件:
 npx -y @agentmemory/mcp
 ```
 
-**Windows 診斷:** 若 `npx @agentmemory/agentmemory` 失敗,加 `--verbose` 重新執行以看到實際的引擎 stderr。常見失敗模式:
+**Windows 診斷:** 若 `npx @ruby_sakura/agentmemory` 失敗,加 `--verbose` 重新執行以看到實際的引擎 stderr。常見失敗模式:
 
 | 症狀 | 修正 |
 |---|---|
@@ -656,14 +656,14 @@ npx -y @agentmemory/mcp
 | 連接埠衝突 | `netstat -ano \| findstr :3111` 查看佔用,然後 kill 或用 `--port <N>` |
 | Docker 已安裝但仍跳過回退 | 確保 Docker Desktop 確實在執行(系統匣圖示) |
 
-> 注意:iii **引擎** 是預建的二進位檔,而非 cargo crate — 請勿嘗試以 `cargo install` 安裝它。(iii 的 **SDK** 確實已發布到 crates.io、npm 和 PyPI,但 agentmemory 並不需要它們。)受支援的引擎安裝方式皆固定為 v0.11.2:上述預建的 v0.11.2 二進位、**帶版本固定** 的上游 `sh` 安裝指令稿 `curl -fsSL https://install.iii.dev/iii/main/install.sh | VERSION=0.11.2 sh`(macOS/Linux),以及 Docker 鏡像 `iiidev/iii:0.11.2`。直接執行 `install.sh | sh` 會安裝 **最新** 引擎,而 agentmemory 並不支援該版本 — 請務必傳入 `VERSION=0.11.2`。最簡單的方式:直接執行 `npx @agentmemory/agentmemory`,它會為你把固定版本的引擎取得到 `~/.agentmemory/bin`。
+> 注意:iii **引擎** 是預建的二進位檔,而非 cargo crate — 請勿嘗試以 `cargo install` 安裝它。(iii 的 **SDK** 確實已發布到 crates.io、npm 和 PyPI,但 agentmemory 並不需要它們。)受支援的引擎安裝方式皆固定為 v0.11.2:上述預建的 v0.11.2 二進位、**帶版本固定** 的上游 `sh` 安裝指令稿 `curl -fsSL https://install.iii.dev/iii/main/install.sh | VERSION=0.11.2 sh`(macOS/Linux),以及 Docker 鏡像 `iiidev/iii:0.11.2`。直接執行 `install.sh | sh` 會安裝 **最新** 引擎,而 agentmemory 並不支援該版本 — 請務必傳入 `VERSION=0.11.2`。最簡單的方式:直接執行 `npx @ruby_sakura/agentmemory`,它會為你把固定版本的引擎取得到 `~/.agentmemory/bin`。
 
 ---
 
 <h2 id="deploy">部署</h2>
 
 託管主機的一鍵範本。每個範本都附帶自含的
-Dockerfile,從 npm 拉取 `@agentmemory/agentmemory` 並從官方
+Dockerfile,從 npm 拉取 `@ruby_sakura/agentmemory` 並從官方
 `iiidev/iii` Docker Hub 鏡像複製 iii 引擎二進位 — 無需
 預建 agentmemory 鏡像。持久儲存掛載在
 `/data`;首次啟動 entrypoint 用面向部署調校的設定
@@ -838,7 +838,7 @@ npm install @xenova/transformers
 
 53 個工具、6 個資源、3 個提示、4 個 skills — 任何代理可用的最全面 MCP 記憶工具組。
 
-> **MCP shim 對比完整伺服器:** 已發布的 `@agentmemory/mcp` 套件是一個薄 shim。**只有當它能透過 `AGENTMEMORY_URL` 連通執行中的 agentmemory 伺服器**(代理模式)時,才暴露完整的 51 工具表面。在沒有可達伺服器的情況下,shim 回退到 7 工具的本地集合(`memory_save`、`memory_recall`、`memory_smart_search`、`memory_sessions`、`memory_export`、`memory_audit`、`memory_governance_delete`)。`AGENTMEMORY_TOOLS=core|all` 環境變數是*伺服器端*旗標 — 在 shim 的 `env` 區塊中設定無效。若在 Cursor / OpenCode / Gemini CLI 中只看到 7 個工具,啟動 `npx @agentmemory/agentmemory`(或 Docker 堆疊)並設定 `AGENTMEMORY_URL=http://localhost:3111`。
+> **MCP shim 對比完整伺服器:** 已發布的 `@agentmemory/mcp` 套件是一個薄 shim。**只有當它能透過 `AGENTMEMORY_URL` 連通執行中的 agentmemory 伺服器**(代理模式)時,才暴露完整的 51 工具表面。在沒有可達伺服器的情況下,shim 回退到 7 工具的本地集合(`memory_save`、`memory_recall`、`memory_smart_search`、`memory_sessions`、`memory_export`、`memory_audit`、`memory_governance_delete`)。`AGENTMEMORY_TOOLS=core|all` 環境變數是*伺服器端*旗標 — 在 shim 的 `env` 區塊中設定無效。若在 Cursor / OpenCode / Gemini CLI 中只看到 7 個工具,啟動 `npx @ruby_sakura/agentmemory`(或 Docker 堆疊)並設定 `AGENTMEMORY_URL=http://localhost:3111`。
 
 ### 51 個工具
 
@@ -921,7 +921,7 @@ npm install @xenova/transformers
 無需完整伺服器即可執行 — 適用於任何 MCP 用戶端。以下兩種都可以:
 
 ```bash
-npx -y @agentmemory/agentmemory mcp   # 標準指令(始終可用)
+npx -y @ruby_sakura/agentmemory mcp   # 標準指令(始終可用)
 npx -y @agentmemory/mcp                # shim 套件別名
 ```
 

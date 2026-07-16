@@ -45,9 +45,9 @@ jobs:
       - run: npm run build
       - run: npm test
 
-      - name: Publish @agentmemory/agentmemory
+      - name: Publish @ruby_sakura/agentmemory
         run: |
-          if npm view "@agentmemory/agentmemory@$(node -p "require('./package.json').version")" version >/dev/null 2>&1; then
+          if npm view "@ruby_sakura/agentmemory@$(node -p "require('./package.json').version")" version >/dev/null 2>&1; then
             echo "Version already published, skipping"
           else
             npm publish --provenance --access public
@@ -59,7 +59,7 @@ jobs:
         run: |
           VERSION=$(node -p "require('./package.json').version")
           for i in $(seq 1 24); do
-            if npm view "@agentmemory/agentmemory@$VERSION" version >/dev/null 2>&1; then
+            if npm view "@ruby_sakura/agentmemory@$VERSION" version >/dev/null 2>&1; then
               echo "Registry propagated after ${i} attempt(s)"
               exit 0
             fi
