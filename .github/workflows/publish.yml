@@ -47,15 +47,58 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           npm version patch --no-git-tag-version
           NEW_VERSION=$(node -p "require('./package.json').version")
-          # Sync mcp shim version with main package
           node -e "
             const fs = require('fs');
-            const p = JSON.parse(fs.readFileSync('packages/mcp/package.json', 'utf8'));
-            p.version = '${NEW_VERSION}';
-            p.dependencies['@ruby_sakura/agentmemory'] = '~${NEW_VERSION}';
-            fs.writeFileSync('packages/mcp/package.json', JSON.stringify(p, null, 2) + '\n');
+            const path = require('path');
+
+            function updateJson(file, fn) {
+              const p = JSON.parse(fs.readFileSync(file, 'utf8'));
+              fn(p);
+              fs.writeFileSync(file, JSON.stringify(p, null, 2) + '\n');
+            }
+
+            // 1. packages/mcp/package.json
+            updateJson('packages/mcp/package.json', p => {
+              p.version = '${NEW_VERSION}';
+              p.dependencies['@ruby_sakura/agentmemory'] = '~${NEW_VERSION}';
+            });
+
+            // 2. plugin JSONs
+            for (const f of ['plugin/.claude-plugin/plugin.json', 'plugin/.codex-plugin/plugin.json', 'plugin/plugin.json']) {
+              updateJson(f, p => { p.version = '${NEW_VERSION}'; });
+            }
+
+            // 3. src/version.ts
+            const vts = fs.readFileSync('src/version.ts', 'utf8');
+            fs.writeFileSync('src/version.ts', vts.replace(/\"${OLD_VERSION}\"/, '\"${NEW_VERSION}\"'));
+
+            // 4. src/types.ts — append new version to ExportData union
+            let types = fs.readFileSync('src/types.ts', 'utf8');
+            types = types.replace(
+              /\"${OLD_VERSION}\";/,
+              '\"${OLD_VERSION}\" | \"${NEW_VERSION}\";'
+            );
+            fs.writeFileSync('src/types.ts', types);
+
+            // 5. src/functions/export-import.ts — add to supportedVersions
+            let ei = fs.readFileSync('src/functions/export-import.ts', 'utf8');
+            ei = ei.replace(
+              /\"${OLD_VERSION}\"\]/,
+              '\"${OLD_VERSION}\", \"${NEW_VERSION}\"]'
+            );
+            fs.writeFileSync('src/functions/export-import.ts', ei);
+
+            // 6. test/export-import.test.ts — update version assertion
+            let test = fs.readFileSync('test/export-import.test.ts', 'utf8');
+            test = test.replace(
+              new RegExp('toBe\\\\(\"${OLD_VERSION}\"\\\\)'),
+              'toBe(\"${NEW_VERSION}\")'
+            );
+            fs.writeFileSync('test/export-import.test.ts', test);
           "
-          git add package.json packages/mcp/package.json
+          git add package.json packages/mcp/package.json \
+            plugin/.claude-plugin/plugin.json plugin/.codex-plugin/plugin.json plugin/plugin.json \
+            src/version.ts src/types.ts src/functions/export-import.ts test/export-import.test.ts
           git commit -m "chore: bump version ${OLD_VERSION} -> ${NEW_VERSION} [skip ci]"
           git tag "v${NEW_VERSION}"
           git push origin develop --tags
