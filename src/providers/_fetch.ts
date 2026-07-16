@@ -1,29 +1,25 @@
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { getEnvVar } from "../config.js";
 
-let cachedAgent: HttpsProxyAgent<string> | null | undefined;
+let cachedAgent: HttpsProxyAgent<string> | undefined;
 
 function getProxyAgent(): HttpsProxyAgent<string> | undefined {
-  if (cachedAgent !== undefined) return cachedAgent ?? undefined;
+  if (cachedAgent) return cachedAgent;
 
   const proxyUrl =
-    process.env.HTTPS_PROXY ||
-    process.env.https_proxy ||
-    process.env.HTTP_PROXY ||
-    process.env.http_proxy ||
+    getEnvVar("HTTPS_PROXY") ||
+    getEnvVar("https_proxy") ||
+    getEnvVar("HTTP_PROXY") ||
+    getEnvVar("http_proxy") ||
     getEnvVar("AGENTMEMORY_PROXY") ||
     undefined;
 
-  if (!proxyUrl) {
-    cachedAgent = null;
-    return undefined;
-  }
+  if (!proxyUrl) return undefined;
 
   try {
     cachedAgent = new HttpsProxyAgent(proxyUrl);
     return cachedAgent;
   } catch {
-    cachedAgent = null;
     return undefined;
   }
 }
