@@ -1,6 +1,6 @@
 {
   "name": "@ruby_sakura/mcp",
-  "version": "0.9.33",
+  "version": "0.9.34",
   "description": "Standalone MCP server for agentmemory — thin shim that re-exposes @ruby_sakura/agentmemory's MCP entrypoint",
   "type": "module",
   "bin": {
@@ -28,7 +28,7 @@
   "homepage": "https://github.com/RubySakura/agentmemory#readme",
   "bugs": "https://github.com/RubySakura/agentmemory/issues",
   "dependencies": {
-    "@ruby_sakura/agentmemory": "~0.9.33"
+    "@ruby_sakura/agentmemory": "~0.9.34"
   },
   "publishConfig": {
     "access": "public",
