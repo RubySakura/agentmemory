@@ -1,124 +1,139 @@
 name: Publish to npm
 
 on:
-  release:
-    types: [published]
-  workflow_dispatch:
-    inputs:
-      packages:
-        description: "Packages to publish (comma-separated: agentmemory,mcp,fs-watcher)"
-        required: false
-        default: "agentmemory,mcp,fs-watcher"
+  push:
+    branches: [develop]
+    paths-ignore:
+      - "*.md"
+      - "docs/**"
+      - "website/**"
+      - ".github/**"
+      - "!.github/workflows/publish.yml"
 
-# Workflow-level permissions stay minimal — only `contents: read`
-# is required to check out the repo. `id-token: write` is granted on
-# the publish job for npm's --provenance Sigstore OIDC mint.
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@v6
         with:
-          # Don't persist the GITHUB_TOKEN to .git/config — the
-          # publish steps don't push back to the repo, so the token
-          # only needs to live in memory for this checkout.
-          persist-credentials: false
+          ref: develop
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v6
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
 
-      # Two-step install: generate a lockfile in-runner with
-      # --package-lock-only, then install from it with `npm ci`. Gives a
-      # single deterministic dep graph across build / test / publish
-      # within one job — important because publish uses `--provenance`.
-      # Lockfiles are gitignored at the repo level.
       - run: npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
       - run: npm ci --legacy-peer-deps --no-audit --no-fund
       - run: npm run build
       - run: npm test
 
-      - name: Publish @agentmemory/agentmemory
+      - name: Bump patch version
+        id: bump
         run: |
-          if npm view "@agentmemory/agentmemory@$(node -p "require('./package.json').version")" version >/dev/null 2>&1; then
-            echo "Version already published, skipping"
+          OLD_VERSION=$(node -p "require('./package.json').version")
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          npm version patch --no-git-tag-version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+
+            function updateJson(file, fn) {
+              const p = JSON.parse(fs.readFileSync(file, 'utf8'));
+              fn(p);
+              fs.writeFileSync(file, JSON.stringify(p, null, 2) + '\n');
+            }
+
+            // 1. packages/mcp/package.json
+            updateJson('packages/mcp/package.json', p => {
+              p.version = '${NEW_VERSION}';
+              p.dependencies['@ruby_sakura/agentmemory'] = '~${NEW_VERSION}';
+            });
+
+            // 2. plugin JSONs
+            for (const f of ['plugin/.claude-plugin/plugin.json', 'plugin/.codex-plugin/plugin.json', 'plugin/plugin.json']) {
+              updateJson(f, p => { p.version = '${NEW_VERSION}'; });
+            }
+
+            // 3. src/version.ts
+            const vts = fs.readFileSync('src/version.ts', 'utf8');
+            fs.writeFileSync('src/version.ts', vts.replace(/\"${OLD_VERSION}\"/, '\"${NEW_VERSION}\"'));
+
+            // 4. src/types.ts — append new version to ExportData union
+            let types = fs.readFileSync('src/types.ts', 'utf8');
+            types = types.replace(
+              /\"${OLD_VERSION}\";/,
+              '\"${OLD_VERSION}\" | \"${NEW_VERSION}\";'
+            );
+            fs.writeFileSync('src/types.ts', types);
+
+            // 5. src/functions/export-import.ts — add to supportedVersions
+            let ei = fs.readFileSync('src/functions/export-import.ts', 'utf8');
+            ei = ei.replace(
+              /\"${OLD_VERSION}\"\]/,
+              '\"${OLD_VERSION}\", \"${NEW_VERSION}\"]'
+            );
+            fs.writeFileSync('src/functions/export-import.ts', ei);
+
+            // 6. test/export-import.test.ts — update version assertion
+            let test = fs.readFileSync('test/export-import.test.ts', 'utf8');
+            test = test.replace(
+              new RegExp('toBe\\\\(\"${OLD_VERSION}\"\\\\)'),
+              'toBe(\"${NEW_VERSION}\")'
+            );
+            fs.writeFileSync('test/export-import.test.ts', test);
+          "
+          git add package.json packages/mcp/package.json \
+            plugin/.claude-plugin/plugin.json plugin/.codex-plugin/plugin.json plugin/plugin.json \
+            src/version.ts src/types.ts src/functions/export-import.ts test/export-import.test.ts
+          git commit -m "chore: bump version ${OLD_VERSION} -> ${NEW_VERSION} [skip ci]"
+          git tag "v${NEW_VERSION}"
+          git push origin develop --tags
+          echo "version=${NEW_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish @ruby_sakura/agentmemory
+        run: |
+          if npm view "@ruby_sakura/agentmemory@${{ steps.bump.outputs.version }}" version >/dev/null 2>&1; then
+            echo "Version ${{ steps.bump.outputs.version }} already published, skipping"
           else
             npm publish --provenance --access public
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Wait for npm registry propagation
+      - name: Publish @ruby_sakura/mcp
+        working-directory: packages/mcp
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          for i in $(seq 1 24); do
-            if npm view "@agentmemory/agentmemory@$VERSION" version >/dev/null 2>&1; then
-              echo "Registry propagated after ${i} attempt(s)"
-              exit 0
-            fi
-            echo "Attempt $i: not yet available, sleeping 5s..."
-            sleep 5
-          done
-          echo "ERROR: registry never propagated after 2 minutes" >&2
-          exit 1
-
-      - name: Publish @agentmemory/mcp shim
-        working-directory: packages/mcp
-        run: |
-          SHIM_VERSION=$(node -p "require('./package.json').version")
-          if npm view "@agentmemory/mcp@$SHIM_VERSION" version >/dev/null 2>&1; then
-            echo "Shim version already published, skipping"
+          if npm view "@ruby_sakura/mcp@$VERSION" version >/dev/null 2>&1; then
+            echo "Version $VERSION already published, skipping"
           else
             npm publish --provenance --access public
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Wait for @agentmemory/mcp registry propagation
-        working-directory: packages/mcp
-        run: |
-          SHIM_VERSION=$(node -p "require('./package.json').version")
-          for i in $(seq 1 24); do
-            if npm view "@agentmemory/mcp@$SHIM_VERSION" version >/dev/null 2>&1; then
-              echo "Shim propagated after ${i} attempt(s)"
-              exit 0
-            fi
-            echo "Attempt $i: not yet available, sleeping 5s..."
-            sleep 5
-          done
-          echo "ERROR: shim never propagated after 2 minutes" >&2
-          exit 1
-
-      - name: Publish @agentmemory/fs-watcher connector
+      - name: Publish @ruby_sakura/fs-watcher
         working-directory: integrations/filesystem-watcher
         run: |
-          FSW_VERSION=$(node -p "require('./package.json').version")
-          if npm view "@agentmemory/fs-watcher@$FSW_VERSION" version >/dev/null 2>&1; then
-            echo "fs-watcher version already published, skipping"
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "@ruby_sakura/fs-watcher@$VERSION" version >/dev/null 2>&1; then
+            echo "Version $VERSION already published, skipping"
           else
             npm publish --provenance --access public
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Wait for @agentmemory/fs-watcher registry propagation
-        working-directory: integrations/filesystem-watcher
-        run: |
-          FSW_VERSION=$(node -p "require('./package.json').version")
-          for i in $(seq 1 24); do
-            if npm view "@agentmemory/fs-watcher@$FSW_VERSION" version >/dev/null 2>&1; then
-              echo "fs-watcher propagated after ${i} attempt(s)"
-              exit 0
-            fi
-            echo "Attempt $i: not yet available, sleeping 5s..."
-            sleep 5
-          done
-          echo "ERROR: fs-watcher never propagated after 2 minutes" >&2
-          exit 1

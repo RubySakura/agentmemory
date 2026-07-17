@@ -50,7 +50,7 @@ number to plan against. p50 will lie to you.
 
 ```bash
 # 1. Start the daemon however you normally do (npx, Docker, etc.)
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 
 # 2. From the repo root, in another shell:
 npm run bench:load

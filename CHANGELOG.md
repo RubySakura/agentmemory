@@ -201,7 +201,7 @@ Stability + ecosystem wave. Three install-broken bugs (`npm install` ERESOLVE, n
 
 - **Plugin MCP server inherits remote/auth env** ([PR #386](https://github.com/rohitg00/agentmemory/pull/386) by [@LaplaceYoung](https://github.com/LaplaceYoung), closes [#375](https://github.com/rohitg00/agentmemory/issues/375)).
 
-- **`@agentmemory/mcp` rejects literal `${VAR}` placeholders**. Any `AGENTMEMORY_URL` / `AGENTMEMORY_SECRET` value of the form `${...}` is treated as unset and falls back to `http://localhost:3111`.
+- **`@ruby_sakura/mcp` rejects literal `${VAR}` placeholders**. Any `AGENTMEMORY_URL` / `AGENTMEMORY_SECRET` value of the form `${...}` is treated as unset and falls back to `http://localhost:3111`.
 
 - **Codex `stop` hook closes session** ([PR #579](https://github.com/rohitg00/agentmemory/pull/579), closes [#493](https://github.com/rohitg00/agentmemory/issues/493)). `Stop` was missing from the Codex bundle; session never got marked completed.
 
@@ -396,7 +396,7 @@ Two parallel waves landed back-to-back. (1) DevEx polish on top of v0.9.15's fou
 
 - **iii console install probe + auto-install** (PR #410). New `ensureIiiConsole()` checks for the iii-console binary on PATH or in `~/.local/bin`; if missing, prompts interactively to run `curl -fsSL https://install.iii.dev/console/main/install.sh | sh`. Console is first-class — not optional. On install acceptance the ready panel includes the binary's resolved path and a runnable launch hint (`<binPath> -p <port>`); on decline the panel surfaces the install one-liner.
 
-- **Interactive global-install prompt** (PR #410). Replaces the passive `p.log.info` npx hint with a `p.confirm` on first npx run that runs `npm install -g @agentmemory/agentmemory@<VERSION>` inline. Suppressible via `preferences.skipGlobalInstall` so we never ask twice. Closes the v0.9.15-era footgun where users typed `agentmemory stop` in a new shell and hit `command not found`.
+- **Interactive global-install prompt** (PR #410). Replaces the passive `p.log.info` npx hint with a `p.confirm` on first npx run that runs `npm install -g @ruby_sakura/agentmemory@<VERSION>` inline. Suppressible via `preferences.skipGlobalInstall` so we never ask twice. Closes the v0.9.15-era footgun where users typed `agentmemory stop` in a new shell and hit `command not found`.
 
 - **Onboarding wires selected agents inline** ([PR #408](https://github.com/rohitg00/agentmemory/pull/408)). After the multi-select agents step in `runOnboarding`, asks `Run \`agentmemory connect <agent>\` for each selected agent now? [Y/n]` and dispatches each through the existing `runAdapter` path used by the explicit `agentmemory connect` command. Successes + failures get bucketed in a summary block (`Wired: claude-code, codex, cursor · Skipped/failed: hermes (manual install required)`). Cancellation prints the explicit per-agent commands for the user to run later.
 
@@ -406,7 +406,7 @@ Two parallel waves landed back-to-back. (1) DevEx polish on top of v0.9.15's fou
 
 ### Changed
 
-- **MCP messaging reworded as opt-in surface** ([PR #409](https://github.com/rohitg00/agentmemory/pull/409)). The endpoints summary line in `src/index.ts` was foregrounding MCP equally with REST — `Endpoints: 107 REST + 51 MCP tools + 6 MCP resources + 3 MCP prompts`. Users kept reading MCP as compulsory. Now: `REST API: 121 endpoints at http://localhost:<PORT>/agentmemory/*` (primary), plus a second line `MCP surface (opt-in via \`npx @agentmemory/mcp\`): 51 tools · 6 resources · 3 prompts`. Each `connect` adapter additionally prints a protocol-note line above its install summary so the user sees which surface they're wiring (native hooks vs MCP vs both).
+- **MCP messaging reworded as opt-in surface** ([PR #409](https://github.com/rohitg00/agentmemory/pull/409)). The endpoints summary line in `src/index.ts` was foregrounding MCP equally with REST — `Endpoints: 107 REST + 51 MCP tools + 6 MCP resources + 3 MCP prompts`. Users kept reading MCP as compulsory. Now: `REST API: 121 endpoints at http://localhost:<PORT>/agentmemory/*` (primary), plus a second line `MCP surface (opt-in via \`npx @ruby_sakura/mcp\`): 51 tools · 6 resources · 3 prompts`. Each `connect` adapter additionally prints a protocol-note line above its install summary so the user sees which surface they're wiring (native hooks vs MCP vs both).
 
 - **CLI `--help` mcp subcommand description** (PR #409). Was `Start standalone MCP server (no engine required)`. Now: `Start standalone MCP shim — opt-in surface for MCP-only clients (Cursor, Gemini CLI, etc). REST always available at :3111.`
 
@@ -468,7 +468,7 @@ DevEx overhaul. Four PRs landed simultaneously rebuilding the first-run experien
 
 - **Engine version-mismatch warning** (PR #405). When the iii binary on PATH (or attached engine) is not the pinned `IIPINNED_VERSION` (currently v0.11.2), the CLI now prints a clearly-labelled `p.log.warn` with the override path (`AGENTMEMORY_III_VERSION=...` env var or downgrade curl one-liner). Pre-fix was silent acceptance — v0.11.6 on PATH led to undebuggable EPIPE loops.
 
-- **npx PATH hint** (PR #405). After the engine is ready, runs invoked via `npx` get one extra line: `Tip: install globally for the bare \`agentmemory\` command: npm install -g @agentmemory/agentmemory`. Suppressible via `preferences.skipNpxHint`.
+- **npx PATH hint** (PR #405). After the engine is ready, runs invoked via `npx` get one extra line: `Tip: install globally for the bare \`agentmemory\` command: npm install -g @ruby_sakura/agentmemory`. Suppressible via `preferences.skipNpxHint`.
 
 ### Fixed
 
@@ -483,19 +483,19 @@ DevEx overhaul. Four PRs landed simultaneously rebuilding the first-run experien
 
 ## [0.9.14] — 2026-05-15
 
-CLI bootstrap rework so `npx @agentmemory/agentmemory` stops failing on Rancher Desktop and other Docker-shim daemons. The native iii-engine binary is now the first-class start path; Docker becomes opt-in. Also ships `agentmemory stop` so engines started in the background can be torn down without `lsof | xargs kill`. README agents grid reorders OpenHuman next to the other native-integration agents.
+CLI bootstrap rework so `npx @ruby_sakura/agentmemory` stops failing on Rancher Desktop and other Docker-shim daemons. The native iii-engine binary is now the first-class start path; Docker becomes opt-in. Also ships `agentmemory stop` so engines started in the background can be torn down without `lsof | xargs kill`. README agents grid reorders OpenHuman next to the other native-integration agents.
 
 ### Added
 
 - **`agentmemory stop` command** ([PR #396](https://github.com/rohitg00/agentmemory/pull/396)). Reads `~/.agentmemory/iii.pid` first, falls back to `lsof -i :PORT -sTCP:LISTEN -t`, sends `SIGTERM`, waits 3s, escalates to `SIGKILL`. iii-engine doesn't currently handle `SIGTERM` cleanly so the SIGKILL escalation is what actually frees the port. State file (`~/.agentmemory/engine-state.json`) records whether the engine was started natively or via `docker compose up -d`, so `stop` runs `docker compose -f <file> down` for Docker engines instead of signaling the host's Docker socket proxy by accident.
 
-- **`AGENTMEMORY_USE_DOCKER=1` env var**. Opt-in path for users who want the bundled `docker-compose.yml` to keep handling iii-engine lifecycle. Without it, the CLI prefers the native binary in `~/.local/bin/iii`. Documented in `npx @agentmemory/agentmemory --help`.
+- **`AGENTMEMORY_USE_DOCKER=1` env var**. Opt-in path for users who want the bundled `docker-compose.yml` to keep handling iii-engine lifecycle. Without it, the CLI prefers the native binary in `~/.local/bin/iii`. Documented in `npx @ruby_sakura/agentmemory --help`.
 
 ### Changed
 
 - **`startEngine()` fallback order rewritten** ([PR #396](https://github.com/rohitg00/agentmemory/pull/396)). New tier order: (1) `iii` on PATH, (2) `~/.local/bin/iii` or other fallback paths, (3) interactive clack `p.select` with three choices — auto-install the pinned v0.11.2 binary, use Docker compose, or print manual install instructions and exit, (4) Docker compose only via explicit opt-in or the post-install failure fallback, (5) fail-loud with install instructions. CI / non-TTY environments auto-pick install. The Docker fallback was tier 2 and silently fired on every cold start; on Rancher Desktop `docker compose up -d` returns 0 even when the daemon's pull silently fails, which is what produced the "engine started but REST never responded" misdiagnoses we've been seeing this week.
 
-- **Installer logic extracted from `runUpgrade` into `runIiiInstaller()`**. Both first-run and `agentmemory upgrade` now share the same pinned-v0.11.2 curl-and-tar path. The pre-v0.9.14 installer only ran on `npx @agentmemory/agentmemory upgrade`, so first-time users never auto-installed.
+- **Installer logic extracted from `runUpgrade` into `runIiiInstaller()`**. Both first-run and `agentmemory upgrade` now share the same pinned-v0.11.2 curl-and-tar path. The pre-v0.9.14 installer only ran on `npx @ruby_sakura/agentmemory upgrade`, so first-time users never auto-installed.
 
 - **`installInstructions()` copy reordered**. The curl one-liner now leads (path A), Docker is path B with the `AGENTMEMORY_USE_DOCKER=1` env-var hint. The historical "Why pinned" rationale moved out of the failure note (it's still in the source comment for anyone debugging the pin choice).
 
@@ -521,7 +521,7 @@ Six PRs landed since v0.9.12 — `.env.example` discovery shipped (#372), CJK BM
 
 ### Added
 
-- **`.env.example` at repo root + bundled in the npm tarball** ([#372](https://github.com/rohitg00/agentmemory/issues/372), closes [#47](https://github.com/rohitg00/agentmemory/issues/47), [#293](https://github.com/rohitg00/agentmemory/issues/293), partial [#233](https://github.com/rohitg00/agentmemory/issues/233)). Every env var actually read by `src/` is now documented in one place, grouped by surface (LLM provider, embedding provider, auth, search tuning, behaviour flags, CLI runtime, ports, iii engine pin, Claude Code bridge, Obsidian export). Every line is commented out by default so the file ships as a config template, not a config. The npm package now lists `.env.example` in its `files` field so `npm i -g @agentmemory/agentmemory` carries it.
+- **`.env.example` at repo root + bundled in the npm tarball** ([#372](https://github.com/rohitg00/agentmemory/issues/372), closes [#47](https://github.com/rohitg00/agentmemory/issues/47), [#293](https://github.com/rohitg00/agentmemory/issues/293), partial [#233](https://github.com/rohitg00/agentmemory/issues/233)). Every env var actually read by `src/` is now documented in one place, grouped by surface (LLM provider, embedding provider, auth, search tuning, behaviour flags, CLI runtime, ports, iii engine pin, Claude Code bridge, Obsidian export). Every line is commented out by default so the file ships as a config template, not a config. The npm package now lists `.env.example` in its `files` field so `npm i -g @ruby_sakura/agentmemory` carries it.
 
 - **`agentmemory init` command**. Copies the bundled `.env.example` to `~/.agentmemory/.env` if that file doesn't already exist; refuses to overwrite an existing config and prints a diff command pointing at the latest template. Wired into the CLI help block alongside `status` / `doctor` / `demo` / `upgrade` / `mcp` / `import-jsonl`.
 
@@ -531,7 +531,7 @@ Six PRs landed since v0.9.12 — `.env.example` discovery shipped (#372), CJK BM
 
 - **`benchmark/load-100k.ts` load harness** ([#346](https://github.com/rohitg00/agentmemory/issues/346), PR [#363](https://github.com/rohitg00/agentmemory/pull/363)). Hand-rolled, dependency-free harness that seeds N synthetic memories against a local daemon at `http://localhost:3111` and records p50 / p90 / p99 latency + throughput for `POST /agentmemory/remember`, `POST /agentmemory/smart-search`, and `GET /agentmemory/memories?latest=true` across the matrix N ∈ {1k, 10k, 100k} × concurrency C ∈ {1, 10, 100}. Content drawn from a seedable `mulberry32` PRNG so re-running against the same build produces the same seed corpus. Results land in `benchmark/results/load-100k-<short-git-sha>.json`. Wired as `npm run bench:load`.
 
-- **One-click deploy templates** for fly.io, Railway, Render, and Coolify ([#343](https://github.com/rohitg00/agentmemory/issues/343), PR [#361](https://github.com/rohitg00/agentmemory/pull/361)). Each template under `deploy/<platform>/` ships a multi-stage Dockerfile that `COPY --from=iiidev/iii:0.11.2`s the engine binary into a `node:22-slim` runtime, npm-installs `@agentmemory/agentmemory` under `/opt/agentmemory` with `iii-sdk` pinned via `package.json` overrides (avoids the caret-resolves-to-0.11.6 drift), and runs an entrypoint that rewrites the bundled `iii-config.yaml` to bind `0.0.0.0` + use absolute `/data` paths, chowns the platform-mounted volume to `node:node` via `gosu`, generates a first-boot HMAC secret, and exec's the agentmemory CLI as the unprivileged `node` user under `tini` (with `TINI_SUBREAPER=1`). Verified end-to-end on fly.io (machine in `iad`, 1 GB volume, healthcheck passing).
+- **One-click deploy templates** for fly.io, Railway, Render, and Coolify ([#343](https://github.com/rohitg00/agentmemory/issues/343), PR [#361](https://github.com/rohitg00/agentmemory/pull/361)). Each template under `deploy/<platform>/` ships a multi-stage Dockerfile that `COPY --from=iiidev/iii:0.11.2`s the engine binary into a `node:22-slim` runtime, npm-installs `@ruby_sakura/agentmemory` under `/opt/agentmemory` with `iii-sdk` pinned via `package.json` overrides (avoids the caret-resolves-to-0.11.6 drift), and runs an entrypoint that rewrites the bundled `iii-config.yaml` to bind `0.0.0.0` + use absolute `/data` paths, chowns the platform-mounted volume to `node:node` via `gosu`, generates a first-boot HMAC secret, and exec's the agentmemory CLI as the unprivileged `node` user under `tini` (with `TINI_SUBREAPER=1`). Verified end-to-end on fly.io (machine in `iad`, 1 GB volume, healthcheck passing).
 
 - **`examples/python/`** quickstart + observation/recall flow showing `iii-sdk` (Python) calling `mem::remember` / `mem::smart-search` / `mem::context` directly over `ws://localhost:49134` ([#342](https://github.com/rohitg00/agentmemory/issues/342), PR [#364](https://github.com/rohitg00/agentmemory/pull/364)). Replaces a duplicate-transport Python REST client (initial PR #360, closed) with a single-SDK story — the same `iii-sdk` install (`pip install iii-sdk` / `cargo add iii-sdk` / `npm install iii-sdk`) talks to every agentmemory function from any language.
 
@@ -563,7 +563,7 @@ Four landed PRs since v0.9.11 — one type-correctness fix, one search-quality f
 
   **CJK caveat preserved**: this fix recovers Greek, Cyrillic, accented Latin, Hebrew, Arabic, and other space-delimited scripts. CJK languages without spaces between characters still tokenize as a single sentence-long token — separate concern, needs a segmenter (PR #224 area).
 
-- **`@agentmemory/mcp` standalone shim's `RetentionScore` type no longer declares `source` twice** ([#326](https://github.com/rohitg00/agentmemory/pull/326), closes [#277](https://github.com/rohitg00/agentmemory/issues/277)). `src/types.ts:835` and `:842` both declared `source?: "episodic" | "semantic"` on `RetentionScore`. TypeScript silently accepts duplicate property declarations when the types are identical, so the build never errored — but the documented JSDoc on the first declaration (the #124 back-compat note explaining `undefined` should probe both scopes) was effectively shadowed by the duplicate. Removed the second declaration; grep confirmed no caller writes `source` twice on the same `RetentionScore` row, so the cleanup is a pure type-correctness fix with no runtime change. Thanks @cl0ckt0wer for the precise file:line trace.
+- **`@ruby_sakura/mcp` standalone shim's `RetentionScore` type no longer declares `source` twice** ([#326](https://github.com/rohitg00/agentmemory/pull/326), closes [#277](https://github.com/rohitg00/agentmemory/issues/277)). `src/types.ts:835` and `:842` both declared `source?: "episodic" | "semantic"` on `RetentionScore`. TypeScript silently accepts duplicate property declarations when the types are identical, so the build never errored — but the documented JSDoc on the first declaration (the #124 back-compat note explaining `undefined` should probe both scopes) was effectively shadowed by the duplicate. Removed the second declaration; grep confirmed no caller writes `source` twice on the same `RetentionScore` row, so the cleanup is a pure type-correctness fix with no runtime change. Thanks @cl0ckt0wer for the precise file:line trace.
 
 - **Viewer dashboard no longer sticks on "Loading dashboard…" when the page loads** ([#335](https://github.com/rohitg00/agentmemory/pull/335), closes [#323](https://github.com/rohitg00/agentmemory/issues/323)). Two narrow fixes from @hem57's Windows repro: (1) removed the `<link rel="stylesheet">` to `fonts.googleapis.com` — the viewer's strict CSP (`default-src 'none'`, `style-src 'unsafe-inline'`, `font-src 'self'`) blocks external stylesheet origins by design, so every page load logged a CSP violation for the font CSS and another for each blocked font file; system-font fallbacks were already declared on every `--font-*` CSS variable so dropping the external `<link>` is a clean swap. (2) Wrapped `loadDashboard()` body in a `try/catch` that renders the error inline ("Dashboard failed to load: <reason>") instead of leaving the placeholder text up forever — future "stuck Loading" reports now come with concrete error messages instead of just a screenshot of the placeholder.
 
@@ -571,7 +571,7 @@ Four landed PRs since v0.9.11 — one type-correctness fix, one search-quality f
 
 ### Changed
 
-- `@agentmemory/mcp` package version bumped from 0.9.11 → 0.9.12 to lockstep with the main package.
+- `@ruby_sakura/mcp` package version bumped from 0.9.11 → 0.9.12 to lockstep with the main package.
 
 ## [0.9.11] — 2026-05-13
 
@@ -589,7 +589,7 @@ Three additions on top of v0.9.10: OpenAI Codex got a plugin platform and agentm
 
 ### Changed
 
-- `@agentmemory/mcp` package version bumped from 0.9.10 → 0.9.11 to lockstep with the main package.
+- `@ruby_sakura/mcp` package version bumped from 0.9.10 → 0.9.11 to lockstep with the main package.
 - README now distinguishes **Codex CLI (MCP only)** from **Codex CLI (full plugin)** in the per-host install table and lists the marketplace install command for the latter.
 
 ## [0.9.10] — 2026-05-12
@@ -606,7 +606,7 @@ Three deployment-shape fixes reported live by [@flamerged](https://github.com/fl
 
 ### Changed
 
-- `@agentmemory/mcp` package version bumped from 0.9.9 → 0.9.10 to lockstep with the main package.
+- `@ruby_sakura/mcp` package version bumped from 0.9.9 → 0.9.10 to lockstep with the main package.
 
 ## [0.9.9] — 2026-05-11
 
@@ -620,7 +620,7 @@ Two field-reported regressions closed: pinned memory slots never reached Session
 
 ### Changed
 
-- `@agentmemory/mcp` package version bumped from 0.9.8 → 0.9.9 to lockstep with the main package.
+- `@ruby_sakura/mcp` package version bumped from 0.9.8 → 0.9.9 to lockstep with the main package.
 
 ## [0.9.8] — 2026-05-11
 
@@ -628,19 +628,19 @@ Single-line follow-up to v0.9.7's MCP shim work. v0.9.7 surfaced probe failures,
 
 ### Fixed
 
-- **`@agentmemory/mcp` local-mode `tools/list` now exposes all 7 `IMPLEMENTED_TOOLS`, not the 4-tool intersection with `ESSENTIAL_TOOLS`.** The local-fallback branch in `src/mcp/standalone.ts` filtered `getVisibleTools()` through `IMPLEMENTED_TOOLS`, but `getVisibleTools()` honors the shim process's own `AGENTMEMORY_TOOLS` env var (unset → "core" → 8 `ESSENTIAL_TOOLS`). The intersection of `ESSENTIAL_TOOLS` (8) and `IMPLEMENTED_TOOLS` (7) is exactly 4 tools: `memory_save`, `memory_recall`, `memory_smart_search`, `memory_sessions`. Those four were the only ones MCP clients saw when no agentmemory server was reachable — even though the shim's `InMemoryKV` implements all seven (the four above plus `memory_export`, `memory_audit`, `memory_governance_delete`). The filter source was wrong: the shim dispatches by `IMPLEMENTED_TOOLS`, not by `ESSENTIAL_TOOLS`, so a server-tier env var should never have shaped the shim's local-fallback list. Switched to `getAllTools().filter((t) => IMPLEMENTED_TOOLS.has(t.name))`, which picks the same 7 names from the unfiltered universe regardless of `AGENTMEMORY_TOOLS`. Refactored the `tools/list` handler into an exported `handleToolsList()` for direct testability, and added a regression test asserting the local-fallback path returns exactly the 7 names under both unset and `core` modes. Verified live via stdio against a downed server: shim now returns 7 names (was 4). (#283, closes [#234](https://github.com/rohitg00/agentmemory/issues/234))
+- **`@ruby_sakura/mcp` local-mode `tools/list` now exposes all 7 `IMPLEMENTED_TOOLS`, not the 4-tool intersection with `ESSENTIAL_TOOLS`.** The local-fallback branch in `src/mcp/standalone.ts` filtered `getVisibleTools()` through `IMPLEMENTED_TOOLS`, but `getVisibleTools()` honors the shim process's own `AGENTMEMORY_TOOLS` env var (unset → "core" → 8 `ESSENTIAL_TOOLS`). The intersection of `ESSENTIAL_TOOLS` (8) and `IMPLEMENTED_TOOLS` (7) is exactly 4 tools: `memory_save`, `memory_recall`, `memory_smart_search`, `memory_sessions`. Those four were the only ones MCP clients saw when no agentmemory server was reachable — even though the shim's `InMemoryKV` implements all seven (the four above plus `memory_export`, `memory_audit`, `memory_governance_delete`). The filter source was wrong: the shim dispatches by `IMPLEMENTED_TOOLS`, not by `ESSENTIAL_TOOLS`, so a server-tier env var should never have shaped the shim's local-fallback list. Switched to `getAllTools().filter((t) => IMPLEMENTED_TOOLS.has(t.name))`, which picks the same 7 names from the unfiltered universe regardless of `AGENTMEMORY_TOOLS`. Refactored the `tools/list` handler into an exported `handleToolsList()` for direct testability, and added a regression test asserting the local-fallback path returns exactly the 7 names under both unset and `core` modes. Verified live via stdio against a downed server: shim now returns 7 names (was 4). (#283, closes [#234](https://github.com/rohitg00/agentmemory/issues/234))
 
 ### Changed
 
-- `@agentmemory/mcp` package version bumped from 0.9.7 → 0.9.8 to lockstep with the main package.
+- `@ruby_sakura/mcp` package version bumped from 0.9.7 → 0.9.8 to lockstep with the main package.
 
 ## [0.9.7] — 2026-05-11
 
-Four follow-up fixes to v0.9.6 reported live by [@jcalfee](https://github.com/jcalfee) ([#234](https://github.com/rohitg00/agentmemory/issues/234)) and [@satabd](https://github.com/satabd) ([#278](https://github.com/rohitg00/agentmemory/issues/278)): the `@agentmemory/mcp` shim gained probe diagnostics and an escape hatch for clients that can reach the server via a non-default route, the Docker compose stack now persists state across `docker compose down` (the volume binding was unused due to a working-directory mismatch in the engine config), a cosmetic `which iii` stderr leak was suppressed, and the engine container's log output is now bounded so a crash/restart spam loop can no longer fill the host disk.
+Four follow-up fixes to v0.9.6 reported live by [@jcalfee](https://github.com/jcalfee) ([#234](https://github.com/rohitg00/agentmemory/issues/234)) and [@satabd](https://github.com/satabd) ([#278](https://github.com/rohitg00/agentmemory/issues/278)): the `@ruby_sakura/mcp` shim gained probe diagnostics and an escape hatch for clients that can reach the server via a non-default route, the Docker compose stack now persists state across `docker compose down` (the volume binding was unused due to a working-directory mismatch in the engine config), a cosmetic `which iii` stderr leak was suppressed, and the engine container's log output is now bounded so a crash/restart spam loop can no longer fill the host disk.
 
 ### Fixed
 
-- **`@agentmemory/mcp` standalone shim now surfaces probe failures and ships an escape hatch and a debug-trace knob.** The `livez` probe in `src/mcp/rest-proxy.ts` used a 500 ms timeout and silently swallowed every failure: when the probe failed, the shim fell back to the 7-tool `IMPLEMENTED_TOOLS` set with no log line explaining why. The probe now writes the URL, HTTP status (or thrown reason), and the active timeout to `stderr` on every failure; the default timeout is raised to 2000 ms; `AGENTMEMORY_PROBE_TIMEOUT_MS` overrides it for slow loopbacks; `AGENTMEMORY_FORCE_PROXY=1` skips the probe entirely and trusts `AGENTMEMORY_URL` outright (the right escape hatch when the shim can reach the server via a known route but not the host's `localhost`); and `AGENTMEMORY_DEBUG=1` traces `tools/list` end-to-end (`handle.mode`, response shape, returned tool count, local-fallback contents) so MCP integrations have first-class visibility into what the shim is actually returning over the wire. The shim verified end-to-end via stdio against an `AGENTMEMORY_TOOLS=all` server: `tools/list` returns all 51 tools. (closes [#234](https://github.com/rohitg00/agentmemory/issues/234), thanks [@jcalfee](https://github.com/jcalfee) for the host-vs-sandboxed-client repro and detailed log captures)
+- **`@ruby_sakura/mcp` standalone shim now surfaces probe failures and ships an escape hatch and a debug-trace knob.** The `livez` probe in `src/mcp/rest-proxy.ts` used a 500 ms timeout and silently swallowed every failure: when the probe failed, the shim fell back to the 7-tool `IMPLEMENTED_TOOLS` set with no log line explaining why. The probe now writes the URL, HTTP status (or thrown reason), and the active timeout to `stderr` on every failure; the default timeout is raised to 2000 ms; `AGENTMEMORY_PROBE_TIMEOUT_MS` overrides it for slow loopbacks; `AGENTMEMORY_FORCE_PROXY=1` skips the probe entirely and trusts `AGENTMEMORY_URL` outright (the right escape hatch when the shim can reach the server via a known route but not the host's `localhost`); and `AGENTMEMORY_DEBUG=1` traces `tools/list` end-to-end (`handle.mode`, response shape, returned tool count, local-fallback contents) so MCP integrations have first-class visibility into what the shim is actually returning over the wire. The shim verified end-to-end via stdio against an `AGENTMEMORY_TOOLS=all` server: `tools/list` returns all 51 tools. (closes [#234](https://github.com/rohitg00/agentmemory/issues/234), thanks [@jcalfee](https://github.com/jcalfee) for the host-vs-sandboxed-client repro and detailed log captures)
 
 - **Docker compose stack no longer loses state on `docker compose down`.** `iii-config.docker.yaml` configured `iii-state` and `iii-stream` with relative `file_path: ./data/...`, which the engine resolves against its container `WORKDIR=/home/nonroot` — not the `/data` mount where the named `iii-data` volume lives. State and stream stores were written to the ephemeral container layer and discarded on every container restart, so memories, BM25 index, and stream backlog vanished. Both paths are now absolute (`/data/state_store.db` and `/data/stream_store`), routing writes through the named volume as the compose file always intended. Existing users need a one-time `docker compose down -v` to clear the old empty volume layout before the upgrade.
 
@@ -650,7 +650,7 @@ Four follow-up fixes to v0.9.6 reported live by [@jcalfee](https://github.com/jc
 
 ### Changed
 
-- `@agentmemory/mcp` package version bumped from 0.9.6 → 0.9.7 to lockstep with the main package.
+- `@ruby_sakura/mcp` package version bumped from 0.9.6 → 0.9.7 to lockstep with the main package.
 
 ## [0.9.6] — 2026-05-10
 
@@ -660,13 +660,13 @@ Three reliability fixes that close field-reported regressions in v0.9.5: search/
 
 - **`memory_smart_search` and `memory_recall` surface memories saved via `memory_save` again.** v0.9.5 indexed memories into BM25 (#258), so search ranked them correctly — but the result-enrichment step on both retrieval paths still queried `KV.observations(sessionId, obsId)`. Memories live in `KV.memories` under a synthetic sessionId, so every hit was silently dropped and clients saw `results: []`. Both `HybridSearch.enrichResults` (which powers `/smart-search`) and `mem::search`'s observation map (which powers `/search` / `memory_recall`) now fall back to `KV.memories` when the observation lookup misses, coercing the `Memory` record into a `CompressedObservation` via a new shared `memoryToObservation` helper in `src/state/memory-utils.ts`. Verified live end-to-end against an iii-engine 0.11.2 stack: pre-fix both endpoints returned `[]` for a saved memory; post-fix the memory surfaces with `score > 0` on both. (#269, closes [#265](https://github.com/rohitg00/agentmemory/issues/265))
 
-- **`@agentmemory/mcp` standalone shim now exposes the server's full tool surface to non-Claude clients.** With `AGENTMEMORY_TOOLS=all` on the server, OpenCode / Cursor / Gemini CLI / Cline users expected 51 tools; the shim filtered the response through a hardcoded 7-tool `IMPLEMENTED_TOOLS` set baked in for the local InMemoryKV fallback, so they got 4 (default) or 7 (with the env var). The shim now delegates `tools/list` to `GET /agentmemory/mcp/tools` when an agentmemory server is reachable, and forwards any non-essential tool to `POST /agentmemory/mcp/call` for server-side validation. The local InMemoryKV fallback is unchanged — it still implements only the 7 essential tools, with a clearer error pointing to `AGENTMEMORY_URL` when no server is reachable. Verified live end-to-end via stdio JSON-RPC driver: pre-fix `tools/list` returned 4 tools and `memory_lesson_save` raised "Unknown tool"; post-fix `tools/list` returned 51 and `memory_lesson_save` created a lesson. (#270, closes [#234](https://github.com/rohitg00/agentmemory/issues/234))
+- **`@ruby_sakura/mcp` standalone shim now exposes the server's full tool surface to non-Claude clients.** With `AGENTMEMORY_TOOLS=all` on the server, OpenCode / Cursor / Gemini CLI / Cline users expected 51 tools; the shim filtered the response through a hardcoded 7-tool `IMPLEMENTED_TOOLS` set baked in for the local InMemoryKV fallback, so they got 4 (default) or 7 (with the env var). The shim now delegates `tools/list` to `GET /agentmemory/mcp/tools` when an agentmemory server is reachable, and forwards any non-essential tool to `POST /agentmemory/mcp/call` for server-side validation. The local InMemoryKV fallback is unchanged — it still implements only the 7 essential tools, with a clearer error pointing to `AGENTMEMORY_URL` when no server is reachable. Verified live end-to-end via stdio JSON-RPC driver: pre-fix `tools/list` returned 4 tools and `memory_lesson_save` raised "Unknown tool"; post-fix `tools/list` returned 51 and `memory_lesson_save` created a lesson. (#270, closes [#234](https://github.com/rohitg00/agentmemory/issues/234))
 
 - **Claude Code session/subagent hooks no longer block agent startup waiting for a slow agentmemory.** `session-start.ts` awaited a 5000 ms POST and discarded the response whenever `AGENTMEMORY_INJECT_CONTEXT=false` (the default since 0.8.10) — pure latency. `subagent-start.ts` had a `// fire and forget` comment but the code awaited a 2000 ms POST. Under fan-out (Slack-bot orchestrators, multi-agent harnesses, fanned `claude -p` jobs) the awaited timeouts stack and feed back into the engine; the reporter hit a positive feedback loop that OOM-killed iii-engine. `session-start` now fire-and-forgets on the telemetry path and caps the inject path at 1500 ms (down from 5000 ms). `subagent-start` actually fire-and-forgets, capped at 800 ms. Verified live against a black-hole TCP listener (accepts, never replies): session-start (no inject) 5.05 s → 0.85 s, session-start (inject=true) 5.05 s → 1.55 s, subagent-start 2.05 s → 0.87 s. (#271, closes [#221](https://github.com/rohitg00/agentmemory/issues/221))
 
 ### Changed
 
-- `@agentmemory/mcp` package version bumped from 0.9.4 → 0.9.6 to lockstep with the main package, fixing a release-flow miss in v0.9.5.
+- `@ruby_sakura/mcp` package version bumped from 0.9.4 → 0.9.6 to lockstep with the main package, fixing a release-flow miss in v0.9.5.
 
 ## [0.9.5] — 2026-05-09
 
@@ -711,7 +711,7 @@ If you've been seeing `memory_smart_search` return empty results for memories yo
 
 If you're upgrading from <0.9.5 and have an existing vector index on disk, the new dim-guard will refuse to load if your active embedding provider declares a different dimension than what's persisted. This is the intended safe default — set `AGENTMEMORY_DROP_STALE_INDEX=true` to discard and rebuild from live observations, or re-embed against the new provider before starting.
 
-If you've been on `iii-engine` v0.11.6 and noticed search returning empty after save, install agentmemory 0.9.5 fresh (or run `npx @agentmemory/agentmemory upgrade`) to pull pinned engine v0.11.2. v0.11.6 brings a new sandbox-everything-via-`iii worker add` model that agentmemory hasn't been refactored for yet — that work is tracked as a follow-up; this release just keeps existing users unblocked.
+If you've been on `iii-engine` v0.11.6 and noticed search returning empty after save, install agentmemory 0.9.5 fresh (or run `npx @ruby_sakura/agentmemory upgrade`) to pull pinned engine v0.11.2. v0.11.6 brings a new sandbox-everything-via-`iii worker add` model that agentmemory hasn't been refactored for yet — that work is tracked as a follow-up; this release just keeps existing users unblocked.
 
 [0.9.6]: https://github.com/rohitg00/agentmemory/compare/v0.9.5...v0.9.6
 [0.9.5]: https://github.com/rohitg00/agentmemory/compare/v0.9.4...v0.9.5
@@ -739,12 +739,12 @@ Developer-experience patch. Every disabled feature flag is now visible in the vi
 - **`agentmemory doctor` command.** Runs 10 diagnostic checks in one shot: server reachability, health status, viewer port, LLM provider, embedding provider, four feature flag states, and whether the knowledge graph has data. Every failing check includes a concrete hint with the exact env var or command to fix it. Mirrors the shape of the new viewer feature-flag banners.
 - **`/agentmemory/config/flags` REST endpoint.** Returns `{ version, provider, embeddingProvider, flags[] }` with per-flag `{ key, label, enabled, default, affects, needsLlm, description, enableHow, docsHref }`. Used by the viewer banner, CLI status/doctor, and anyone who wants to introspect config without parsing logs.
 - **Viewer feature-flag banner system.** Compact collapsible summary row at the top of every tab (`⚠ 3 off · ⚙ 1 note · Feature flags — click to expand`). Expanded view shows per-flag card with description, exact enable command, docs link, and dismiss button. Dismissed state persists per-flag in localStorage so banners stay out of the way once acknowledged. Banners filter by the current tab's `affects` list.
-- **Viewer first-run hero card.** When `sessions.length === 0`, dashboard renders an orange-accent card titled "First run → magical moment in 10 seconds" with `npx @agentmemory/agentmemory demo` as the next step. Removes the dead-empty dashboard that used to greet fresh installs.
+- **Viewer first-run hero card.** When `sessions.length === 0`, dashboard renders an orange-accent card titled "First run → magical moment in 10 seconds" with `npx @ruby_sakura/agentmemory demo` as the next step. Removes the dead-empty dashboard that used to greet fresh installs.
 - **Viewer footer with preset issue report.** `agentmemory viewer · v{version} · github · docs · report issue →`. The feedback link opens a GitHub issue pre-filled with version, provider name, embedding provider, flag state, and user-agent — so the first message on an issue already contains the diagnostic context that used to take three back-and-forths.
 - **Richer empty states on Actions, Memories, Lessons, Crystals tabs.** Each now has a titled lead explaining what the tab is for, why it's empty, three concrete ways to populate it (MCP tool, curl, hook), and a docs link. The old one-liners ("No actions yet. Create actions via memory_action_create MCP tool") assumed too much context.
 - **`status` command shows flag state.** New section in the output block lists provider (`✓ llm` / `✗ noop`), embedding provider (`✓ embeddings` / `bm25-only`), and each flag with a tick/cross. Parity with the viewer banner.
 - **`AGENTMEMORY_URL` environment variable honored by CLI.** `status`, `doctor`, and related health checks now respect `AGENTMEMORY_URL=http://host:port` and extract the port from it. Previously documented but silently ignored; `--port N` was the only way to override.
-- **Website install section promotes `demo` to step 2.** `npx @agentmemory/agentmemory demo` now appears between "start server" and "open viewer" on agent-memory.dev. The magical-moment command is on the critical path of the three-step install, not tucked into the README.
+- **Website install section promotes `demo` to step 2.** `npx @ruby_sakura/agentmemory demo` now appears between "start server" and "open viewer" on agent-memory.dev. The magical-moment command is on the critical path of the three-step install, not tucked into the README.
 - **Website version auto-derived from repo package.json.** `gen-meta.mjs` picks up `src/version.ts` on `prebuild` and writes `website/lib/generated-meta.json`. Removes the stale-version drift that showed `v0.9.1` on the landing page after `v0.9.2` shipped.
 
 ### Changed
@@ -803,7 +803,7 @@ Safety + import-pipeline patch. Kills the infinite Stop-hook recursion loop that
 - `FALLBACK_PROVIDERS` parsing now honors the same `AGENTMEMORY_ALLOW_AGENT_SDK` gate as `detectProvider`, filtering out `agent-sdk` from the fallback chain unless explicitly opted in.
 - README provider table + env block updated: no-op is the new default, Claude-subscription fallback moved to a separate opt-in row, OpenAI env vars documented.
 - Hero stat badge refreshed from 654 → 827 tests (both dark + light variants).
-- `VERSION` / `ExportData.version` union / `supportedVersions` Set / `test/export-import.test.ts` / `@agentmemory/mcp` shim version all bumped in lockstep.
+- `VERSION` / `ExportData.version` union / `supportedVersions` Set / `test/export-import.test.ts` / `@ruby_sakura/mcp` shim version all bumped in lockstep.
 - Test count: 827 (up from 812 in v0.9.1).
 
 [0.9.2]: https://github.com/rohitg00/agentmemory/compare/v0.9.1...v0.9.2
@@ -832,13 +832,13 @@ Visibility + correctness release. Landing site, filesystem connector, MCP standa
 
 ### Added
 - **Website** ([#164](https://github.com/rohitg00/agentmemory/pull/164)). Next.js 16 App Router landing page at `website/` — Lamborghini-inspired dark canvas, live GitHub stars pill, agents marquee with real brand logos, command-center tab showcase (viewer · iii console · state · traces), 12-tile feature grid, 10-agent MCP install selector, universal MCP JSON + one-click Cursor/VS Code deeplinks. Deploys to Vercel with Root Directory = `website/`.
-- **Filesystem connector** — new `@agentmemory/fs-watcher` package under `integrations/filesystem-watcher/` ([#163](https://github.com/rohitg00/agentmemory/pull/163), closes [#62](https://github.com/rohitg00/agentmemory/issues/62)). Node `fs.watch` based, no native deps. Emits valid `HookPayload` observations for every file change and delete, with debounce, default ignore list, text-file preview, bearer auth, and env-driven config.
+- **Filesystem connector** — new `@ruby_sakura/fs-watcher` package under `integrations/filesystem-watcher/` ([#163](https://github.com/rohitg00/agentmemory/pull/163), closes [#62](https://github.com/rohitg00/agentmemory/issues/62)). Node `fs.watch` based, no native deps. Emits valid `HookPayload` observations for every file change and delete, with debounce, default ignore list, text-file preview, bearer auth, and env-driven config.
 - **Security advisory drafts** for v0.8.2 CVEs ([#118](https://github.com/rohitg00/agentmemory/pull/118)). Six markdown drafts under `.github/security-advisories/` covering viewer XSS, curl-sh RCE, default 0.0.0.0 bind, unauthenticated mesh sync, Obsidian export traversal, and incomplete secret redaction. Also documents the symlink-traversal limitation of the Obsidian export fix.
 - **iii console documentation** in the README ([#157](https://github.com/rohitg00/agentmemory/pull/157)). How to launch the iii console alongside the viewer, what each page gives you for agentmemory, and the `iii-observability` config that ships turned on.
 
 ### Changed
 - **Audit policy codified** ([#162](https://github.com/rohitg00/agentmemory/pull/162), closes [#125](https://github.com/rohitg00/agentmemory/issues/125)). `src/functions/audit.ts` gains a top-of-file policy block: every structural deletion emits a `recordAudit` row, scoped deletions (`governance-delete`, `forget`) write one row per call, bulk sweeps (`retention-evict`, `evict`, `auto-forget`) write one batched row per invocation. `mem::forget` no longer deletes silently — it writes a single audit row with target ids, session id, and per-type counts.
-- **Standalone MCP talks to the running server** ([#161](https://github.com/rohitg00/agentmemory/pull/161), closes [#159](https://github.com/rohitg00/agentmemory/issues/159)). `@agentmemory/mcp` now probes `GET /agentmemory/livez` at `AGENTMEMORY_URL` (defaults to `http://localhost:3111`) on first tool call. If the server is up, every tool (sessions, smart-search, recall, save, governance-delete, export, audit) routes through REST and sees exactly what hooks and the viewer see. If the probe fails, falls back to the local `InMemoryKV` so pure-standalone setups keep working. Bearer `AGENTMEMORY_SECRET` attached automatically. Handle cache invalidates on proxy failure with a 30s TTL so a later server start is picked up. Response shapes are now consistent across proxy and local branches.
+- **Standalone MCP talks to the running server** ([#161](https://github.com/rohitg00/agentmemory/pull/161), closes [#159](https://github.com/rohitg00/agentmemory/issues/159)). `@ruby_sakura/mcp` now probes `GET /agentmemory/livez` at `AGENTMEMORY_URL` (defaults to `http://localhost:3111`) on first tool call. If the server is up, every tool (sessions, smart-search, recall, save, governance-delete, export, audit) routes through REST and sees exactly what hooks and the viewer see. If the probe fails, falls back to the local `InMemoryKV` so pure-standalone setups keep working. Bearer `AGENTMEMORY_SECRET` attached automatically. Handle cache invalidates on proxy failure with a 30s TTL so a later server start is picked up. Response shapes are now consistent across proxy and local branches.
 - **Retention eviction targets the right store** ([#132](https://github.com/rohitg00/agentmemory/pull/132)). `mem::retention-evict` now routes deletes to `mem:memories` or `mem:semantic` based on the candidate's `source` field, probing both namespaces when the field is missing (legacy rows). Emits a single batched audit row per sweep with `evictedIds`, `evictedEpisodic`, `evictedSemantic`, and the threshold. Retention scores gain a `source` field persisted to the store.
 
 ### Fixed
@@ -847,7 +847,7 @@ Visibility + correctness release. Landing site, filesystem connector, MCP standa
 
 ### Infrastructure
 - `VERSION` union extended to `0.9.0`; `ExportData.version`, `supportedVersions`, and `test/export-import.test.ts` bumped in lockstep.
-- `@agentmemory/mcp` dependency pinned at `~0.9.0` to match.
+- `@ruby_sakura/mcp` dependency pinned at `~0.9.0` to match.
 - Tests: 777 passing (+ 14 skipped), up from 769.
 
 [0.9.0]: https://github.com/rohitg00/agentmemory/compare/v0.8.12...v0.9.0
@@ -935,12 +935,12 @@ Two UX fixes for the Claude Code plugin install path, both reported in [#139](ht
 
 ### Fixed
 
-- **Claude Code plugin now auto-wires the `@agentmemory/mcp` stdio server** ([#139](https://github.com/rohitg00/agentmemory/issues/139)) — the plugin previously only shipped hooks and skills, and the README told Claude Code users to wire up the MCP server manually. A new `plugin/.mcp.json` declares the MCP server so `/plugin install agentmemory@agentmemory` auto-starts it when the plugin is enabled. No extra config step.
+- **Claude Code plugin now auto-wires the `@ruby_sakura/mcp` stdio server** ([#139](https://github.com/rohitg00/agentmemory/issues/139)) — the plugin previously only shipped hooks and skills, and the README told Claude Code users to wire up the MCP server manually. A new `plugin/.mcp.json` declares the MCP server so `/plugin install agentmemory@agentmemory` auto-starts it when the plugin is enabled. No extra config step.
 - **Skills no longer fail under Claude Code's sandbox with "Contains expansion"** ([#139](https://github.com/rohitg00/agentmemory/issues/139)) — the `recall` and `session-history` skills used pre-execution bash with `$(...)` / `${VAR:-default}` shell expansion, which Claude Code's sandbox rejects by pattern match. All four plugin skills (`recall`, `remember`, `forget`, `session-history`) are now rewritten as pure prompts that tell Claude to use the MCP tools directly. No bash, no sandbox issues, no shell escaping — and the skills run faster because they no longer fork a curl subprocess on every invocation.
 
 ### Added
 
-- **Standalone MCP shim now implements `memory_smart_search` and `memory_governance_delete`** — the `@agentmemory/mcp` stdio server only exposed 5 tools (`memory_save`, `memory_recall`, `memory_sessions`, `memory_export`, `memory_audit`), so the rewritten plugin skills would have failed at runtime referencing tools the standalone didn't know about. Now ships 7 tools. `memory_smart_search` falls back to the same substring filter as `memory_recall` since the standalone shim doesn't have BM25/vector/graph without the full engine. `memory_governance_delete` takes `memoryIds` as an array or comma-separated string and returns `{deleted, requested, reason}`.
+- **Standalone MCP shim now implements `memory_smart_search` and `memory_governance_delete`** — the `@ruby_sakura/mcp` stdio server only exposed 5 tools (`memory_save`, `memory_recall`, `memory_sessions`, `memory_export`, `memory_audit`), so the rewritten plugin skills would have failed at runtime referencing tools the standalone didn't know about. Now ships 7 tools. `memory_smart_search` falls back to the same substring filter as `memory_recall` since the standalone shim doesn't have BM25/vector/graph without the full engine. `memory_governance_delete` takes `memoryIds` as an array or comma-separated string and returns `{deleted, requested, reason}`.
 - **`memory_save` accepts `concepts`/`files` as arrays or comma-separated strings** — the old standalone only accepted CSV strings, which would silently drop array inputs. New `normalizeList()` helper handles both.
 - **`memory_sessions` honours a `limit` arg** (default 20) — previously returned every session.
 - **8 regression tests** in `test/mcp-standalone.test.ts` covering array/CSV inputs for `memory_save`, `memory_smart_search` substring fallback, `memory_sessions` limit, `memory_governance_delete` happy path + unknown-id skip + validation. Full suite: 715 passing.
@@ -983,7 +983,7 @@ One-line fix for a brown-paper-bag bug reported in [#136](https://github.com/roh
 
 ### Fixed
 
-- **`npx @agentmemory/agentmemory` no longer crashes with "`/app/config.yaml` is a directory"** ([#136](https://github.com/rohitg00/agentmemory/issues/136), thanks [@stefano-medapps](https://github.com/stefano-medapps)) — the published tarball shipped `docker-compose.yml` but **not** `iii-config.docker.yaml`, even though the compose file mounts `./iii-config.docker.yaml:/app/config.yaml:ro`. Docker resolves missing host-path bind sources by silently creating them as empty directories, so the iii-engine container mounted an empty dir at `/app/config.yaml` and crashed with `Error: Failed to read config file '/app/config.yaml': Is a directory (os error 21)`. The `files` array in `package.json` now includes `iii-config.docker.yaml` alongside the regular `iii-config.yaml`.
+- **`npx @ruby_sakura/agentmemory` no longer crashes with "`/app/config.yaml` is a directory"** ([#136](https://github.com/rohitg00/agentmemory/issues/136), thanks [@stefano-medapps](https://github.com/stefano-medapps)) — the published tarball shipped `docker-compose.yml` but **not** `iii-config.docker.yaml`, even though the compose file mounts `./iii-config.docker.yaml:/app/config.yaml:ro`. Docker resolves missing host-path bind sources by silently creating them as empty directories, so the iii-engine container mounted an empty dir at `/app/config.yaml` and crashed with `Error: Failed to read config file '/app/config.yaml': Is a directory (os error 21)`. The `files` array in `package.json` now includes `iii-config.docker.yaml` alongside the regular `iii-config.yaml`.
 
 ### Infrastructure
 
@@ -997,13 +997,13 @@ Finishes the `npx <shim>` story from #120 by moving the standalone package under
 
 ### Changed
 
-- **Standalone MCP shim is now `@agentmemory/mcp`** — the 0.8.5 publish attempted to push `agentmemory-mcp` as an unscoped package, but npm's name-similarity policy rejects it because of an unrelated third-party package called `agent-memory-mcp`. The shim now lives under the scope we already own, so `npx -y @agentmemory/mcp` works on the live registry. All README/integration/CLI-help snippets, the OpenClaw and Hermes guides, and the Claude-Desktop/Cursor/Codex/OpenCode MCP config examples have been updated to use the scoped name. The unscoped `agentmemory-mcp` command line (in the main package's `bin` field) was never published and has been removed from the docs.
-- **Package directory renamed** `packages/agentmemory-mcp/` → `packages/mcp/`. The `.github/workflows/publish.yml` publish step points at the new path and `npm view @agentmemory/mcp` for the propagation check.
-- **Log prefix** in `src/mcp/standalone.ts` and `src/mcp/in-memory-kv.ts` changed from `[agentmemory-mcp]` to `[@agentmemory/mcp]` so stderr output matches the package users install.
+- **Standalone MCP shim is now `@ruby_sakura/mcp`** — the 0.8.5 publish attempted to push `agentmemory-mcp` as an unscoped package, but npm's name-similarity policy rejects it because of an unrelated third-party package called `agent-memory-mcp`. The shim now lives under the scope we already own, so `npx -y @ruby_sakura/mcp` works on the live registry. All README/integration/CLI-help snippets, the OpenClaw and Hermes guides, and the Claude-Desktop/Cursor/Codex/OpenCode MCP config examples have been updated to use the scoped name. The unscoped `agentmemory-mcp` command line (in the main package's `bin` field) was never published and has been removed from the docs.
+- **Package directory renamed** `packages/agentmemory-mcp/` → `packages/mcp/`. The `.github/workflows/publish.yml` publish step points at the new path and `npm view @ruby_sakura/mcp` for the propagation check.
+- **Log prefix** in `src/mcp/standalone.ts` and `src/mcp/in-memory-kv.ts` changed from `[agentmemory-mcp]` to `[@ruby_sakura/mcp]` so stderr output matches the package users install.
 
 ### Fixed
 
-- **Shim version bump was missed in 0.8.5** — `packages/agentmemory-mcp/package.json` (now `packages/mcp/package.json`) was still pinned at `0.8.4` because the release bump script only touched the 8 files in the main package. The shim now tracks the main package and depends on `@agentmemory/agentmemory: ~0.8.6`.
+- **Shim version bump was missed in 0.8.5** — `packages/agentmemory-mcp/package.json` (now `packages/mcp/package.json`) was still pinned at `0.8.4` because the release bump script only touched the 8 files in the main package. The shim now tracks the main package and depends on `@ruby_sakura/agentmemory: ~0.8.6`.
 
 [0.8.6]: https://github.com/rohitg00/agentmemory/compare/v0.8.5...v0.8.6
 
@@ -1038,9 +1038,9 @@ Two bug fixes reported in the public issue tracker.
 ### Fixed
 
 - **Retention score now reflects real agent-side reads** ([#119](https://github.com/rohitg00/agentmemory/issues/119)) — `mem::retention-score` previously hardcoded `accessCount = 0` and `accessTimestamps = []` for episodic memories, and only used a single-sample `lastAccessedAt` for semantic memories. Reads from `mem::search`, `mem::smart-search`, `mem::context`, `mem::timeline`, `mem::file-context`, and the matching MCP tools (`memory_recall`, `memory_smart_search`, `memory_timeline`, `memory_file_history`) were never recorded, so the time-frequency decay formula was a dead path. The reinforcement boost is now driven by a real per-memory access log persisted at `mem:access`, written by every read endpoint (fire-and-forget, so reads never block on tracker writes), with a bounded ring buffer of the last 20 access timestamps. Pre-0.8.3 semantic memories that only have the legacy `lastAccessedAt` field still score correctly via a backwards-compat fallback.
-- **`npx agentmemory-mcp` 404** ([#120](https://github.com/rohitg00/agentmemory/issues/120)) — the README told users to run `npx agentmemory-mcp` for MCP client setup, but `agentmemory-mcp` was only a `bin` entry inside `@agentmemory/agentmemory`, not a real package, so `npx` returned 404 from the npm registry. Two fixes:
-  - Published a new sibling package `agentmemory-mcp` (in `packages/agentmemory-mcp/`) that is a thin shim over `@agentmemory/agentmemory/dist/standalone.mjs`. `npx agentmemory-mcp` now works as documented.
-  - Added a canonical `npx @agentmemory/agentmemory mcp` subcommand to the main CLI for users who already have `@agentmemory/agentmemory` installed and don't want a second package on disk. Both commands do the same thing.
+- **`npx agentmemory-mcp` 404** ([#120](https://github.com/rohitg00/agentmemory/issues/120)) — the README told users to run `npx agentmemory-mcp` for MCP client setup, but `agentmemory-mcp` was only a `bin` entry inside `@ruby_sakura/agentmemory`, not a real package, so `npx` returned 404 from the npm registry. Two fixes:
+  - Published a new sibling package `agentmemory-mcp` (in `packages/agentmemory-mcp/`) that is a thin shim over `@ruby_sakura/agentmemory/dist/standalone.mjs`. `npx agentmemory-mcp` now works as documented.
+  - Added a canonical `npx @ruby_sakura/agentmemory mcp` subcommand to the main CLI for users who already have `@ruby_sakura/agentmemory` installed and don't want a second package on disk. Both commands do the same thing.
   - README install snippets now use `npx -y agentmemory-mcp` so first-time users skip the install confirmation prompt.
 
 ### Added
@@ -1048,7 +1048,7 @@ Two bug fixes reported in the public issue tracker.
 - **Concurrent access tracking is race-safe** — the access log RMW is wrapped in the existing `withKeyedLock` keyed mutex, so two parallel reads of the same memory don't lose increments. `recordAccessBatch` uses `Promise.allSettled` so a slow keyed-lock acquisition on one id doesn't block the rest of the batch.
 - **`mem::export` / `mem::import` now round-trip the access log** — the new `mem:access` namespace is included in dumps and restored on import, so backup/restore cycles no longer silently zero out reinforcement signals.
 - **`exports` field in `package.json`** — explicitly exposes `./dist/standalone.mjs` as a subpath so the shim package and external consumers have a stable contract.
-- **CI publishes both packages on release** — `.github/workflows/publish.yml` now publishes `@agentmemory/agentmemory` first, then the `agentmemory-mcp` shim from `packages/agentmemory-mcp/` so `npx agentmemory-mcp` works on the live release.
+- **CI publishes both packages on release** — `.github/workflows/publish.yml` now publishes `@ruby_sakura/agentmemory` first, then the `agentmemory-mcp` shim from `packages/agentmemory-mcp/` so `npx agentmemory-mcp` works on the live release.
 
 ## [0.8.2] — 2026-04-12
 

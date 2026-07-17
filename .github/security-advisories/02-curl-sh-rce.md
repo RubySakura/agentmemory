@@ -7,7 +7,7 @@
 
 ## Summary
 
-The agentmemory CLI (`npx @agentmemory/agentmemory`) auto-installed the iii-engine binary by piping a remote shell script into `sh`:
+The agentmemory CLI (`npx @ruby_sakura/agentmemory`) auto-installed the iii-engine binary by piping a remote shell script into `sh`:
 
 ```ts
 execSync("curl -fsSL https://install.iii.dev/iii/main/install.sh | sh")
@@ -20,7 +20,7 @@ This happened automatically on first run if `iii` was not found in `$PATH`. The 
 If `install.iii.dev` were ever compromised — via DNS hijack, domain takeover, expired certificate + MITM on an untrusted network, BGP attack, or any other supply chain attack — **every new agentmemory user would execute attacker-controlled shell code** as their own user.
 
 This is the canonical "curl | sh" supply chain anti-pattern. It affected:
-- Developers running `npx @agentmemory/agentmemory` for the first time
+- Developers running `npx @ruby_sakura/agentmemory` for the first time
 - CI/CD pipelines that installed agentmemory fresh
 - Docker builds that installed agentmemory as part of an image
 
@@ -42,7 +42,7 @@ Users on affected versions should **install iii-engine manually** and run `agent
 
 ```bash
 cargo install iii-engine
-npx @agentmemory/agentmemory@0.8.1 --no-engine
+npx @ruby_sakura/agentmemory@0.8.1 --no-engine
 ```
 
 Then upgrade to 0.8.2 at the earliest opportunity.

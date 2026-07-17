@@ -48,7 +48,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@agentmemory/agentmemory"><img src="https://img.shields.io/npm/v/@agentmemory/agentmemory?color=CB3837&label=npm&style=for-the-badge&logo=npm" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@ruby_sakura/agentmemory"><img src="https://img.shields.io/npm/v/@ruby_sakura/agentmemory?color=CB3837&label=npm&style=for-the-badge&logo=npm" alt="npm version" /></a>
   <a href="https://github.com/rohitg00/agentmemory/actions"><img src="https://img.shields.io/github/actions/workflow/status/rohitg00/agentmemory/ci.yml?label=tests&style=for-the-badge&logo=github" alt="CI" /></a>
   <a href="https://github.com/rohitg00/agentmemory/blob/main/LICENSE"><img src="https://img.shields.io/github/license/rohitg00/agentmemory?color=blue&style=for-the-badge" alt="License" /></a>
   <a href="https://github.com/rohitg00/agentmemory/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/agentmemory?style=for-the-badge&color=yellow&logo=github" alt="Stars" /></a>
@@ -87,9 +87,9 @@
 ## Install
 
 ```bash
-npm install -g @agentmemory/agentmemory          # once — bare `agentmemory` on PATH
+npm install -g @ruby_sakura/agentmemory          # once — bare `agentmemory` on PATH
 # If you hit EACCES on macOS/Linux system Node installs, retry with:
-# sudo npm install -g @agentmemory/agentmemory
+# sudo npm install -g @ruby_sakura/agentmemory
 agentmemory                                      # start the memory server on :3111
 agentmemory demo                                 # seed sample sessions + prove recall
 agentmemory connect claude-code                  # wire your agent (also: codex, cursor, gemini-cli, ...)
@@ -98,10 +98,10 @@ agentmemory connect claude-code                  # wire your agent (also: codex,
 Ou via `npx` (sem instalação):
 
 ```bash
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 ```
 
-Atenção — o npx faz cache por versão. Se um simples `npx @agentmemory/agentmemory` servir uma release antiga, force a mais recente com `npx -y @agentmemory/agentmemory@latest`, ou limpe o cache uma vez com `rm -rf ~/.npm/_npx` (macOS/Linux; no Windows apague `%LOCALAPPDATA%\npm-cache\_npx`). A primeira execução via npx a partir da v0.9.16+ pergunta inline se você quer instalar globalmente, de modo que o comando `agentmemory` simples funcione em qualquer lugar depois.
+Atenção — o npx faz cache por versão. Se um simples `npx @ruby_sakura/agentmemory` servir uma release antiga, force a mais recente com `npx -y @ruby_sakura/agentmemory@latest`, ou limpe o cache uma vez com `rm -rf ~/.npm/_npx` (macOS/Linux; no Windows apague `%LOCALAPPDATA%\npm-cache\_npx`). A primeira execução via npx a partir da v0.9.16+ pergunta inline se você quer instalar globalmente, de modo que o comando `agentmemory` simples funcione em qualquer lugar depois.
 
 Opções completas em [Início rápido](#quick-start) abaixo. Conexão específica por agente em [Funciona com qualquer agente](#works-with-every-agent).
 
@@ -209,10 +209,10 @@ Você explica a mesma arquitetura toda sessão. Você redescobre os mesmos bugs.
 **O que muda:** Na sessão 1 você configura autenticação JWT. Na sessão 2 você pede rate limiting. O agente já sabe que sua autenticação usa o middleware jose em `src/middleware/auth.ts`, que seus testes cobrem a validação de tokens e que você escolheu jose em vez de jsonwebtoken por compatibilidade com Edge. Sem re-explicar. Sem copiar e colar. O agente simplesmente *sabe*.
 
 ```bash
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 ```
 
-> **Novidade na v0.9.0** — Landing em [agent-memory.dev](https://agent-memory.dev), conector de filesystem (`@agentmemory/fs-watcher`), MCP standalone agora faz proxy para o servidor em execução, então hooks e viewer combinam, política de auditoria codificada em cada caminho de deleção, e health para de marcar `memory_critical` em processos Node pequenos. Notas completas em [CHANGELOG.md](../CHANGELOG.md#090--2026-04-18).
+> **Novidade na v0.9.0** — Landing em [agent-memory.dev](https://agent-memory.dev), conector de filesystem (`@ruby_sakura/fs-watcher`), MCP standalone agora faz proxy para o servidor em execução, então hooks e viewer combinam, política de auditoria codificada em cada caminho de deleção, e health para de marcar `memory_critical` em processos Node pequenos. Notas completas em [CHANGELOG.md](../CHANGELOG.md#090--2026-04-18).
 
 ---
 
@@ -363,10 +363,10 @@ Compatibilidade: este release tem como alvo o `iii-sdk` estável `^0.11.0` e o i
 
 ```bash
 # Terminal 1: start the server
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 
 # Terminal 2: seed sample data and see recall in action
-npx @agentmemory/agentmemory demo
+npx @ruby_sakura/agentmemory demo
 ```
 
 `demo` semeia 3 sessões realistas (autenticação JWT, correção de N+1 queries, rate limiting) e roda buscas semânticas sobre elas. Você verá que ele encontra "N+1 query fix" ao buscar "database performance optimization" — algo que matching por palavra-chave não consegue fazer.
@@ -375,12 +375,12 @@ Abra `http://localhost:3113` para acompanhar a memória sendo construída ao viv
 
 ### Recomendado: instale globalmente
 
-`npx` faz cache por versão. Se você rodou `npx @agentmemory/agentmemory@0.9.14` semana passada, um simples `npx @agentmemory/agentmemory` pode servir a versão velha 0.9.14 a partir de `~/.npm/_npx/`, e não a mais recente. Instale uma vez e o comando `agentmemory` funciona em qualquer lugar:
+`npx` faz cache por versão. Se você rodou `npx @ruby_sakura/agentmemory@0.9.14` semana passada, um simples `npx @ruby_sakura/agentmemory` pode servir a versão velha 0.9.14 a partir de `~/.npm/_npx/`, e não a mais recente. Instale uma vez e o comando `agentmemory` funciona em qualquer lugar:
 
 ```bash
-npm install -g @agentmemory/agentmemory
+npm install -g @ruby_sakura/agentmemory
 # If you hit EACCES on macOS/Linux system Node installs, retry with:
-# sudo npm install -g @agentmemory/agentmemory
+# sudo npm install -g @ruby_sakura/agentmemory
 agentmemory                    # start the server (same as the npx form)
 agentmemory stop               # tear it down
 agentmemory remove             # uninstall everything we created
@@ -391,8 +391,8 @@ agentmemory doctor             # interactive diagnostics + fix prompts
 A partir da v0.9.16, a primeira execução via npx pergunta inline se você quer instalar globalmente — responda `Y` uma vez e está pronto. Se pular, recorra a qualquer um destes para um fetch limpo:
 
 ```bash
-npx -y @agentmemory/agentmemory@latest                 # forces latest from npm (cross-platform)
-rm -rf ~/.npm/_npx && npx @agentmemory/agentmemory     # macOS/Linux only (POSIX shell)
+npx -y @ruby_sakura/agentmemory@latest                 # forces latest from npm (cross-platform)
+rm -rf ~/.npm/_npx && npx @ruby_sakura/agentmemory     # macOS/Linux only (POSIX shell)
 ```
 
 No Windows / PowerShell, o equivalente para limpar cache é `Remove-Item -Recurse -Force "$env:LOCALAPPDATA\npm-cache\_npx"` — a forma `npx -y ...@latest` acima é a opção multiplataforma.
@@ -405,10 +405,10 @@ Já tem transcripts antigos JSONL do Claude Code que quer trazer para cá?
 
 ```bash
 # Import everything under the default ~/.claude/projects
-npx @agentmemory/agentmemory import-jsonl
+npx @ruby_sakura/agentmemory import-jsonl
 
 # Or import a single file
-npx @agentmemory/agentmemory import-jsonl ~/.claude/projects/-my-project/abc123.jsonl
+npx @ruby_sakura/agentmemory import-jsonl ~/.claude/projects/-my-project/abc123.jsonl
 ```
 
 As sessões importadas aparecem no seletor de Replay ao lado das nativas. Sob o capô, cada entrada passa pelas funções iii `mem::replay::load`, `mem::replay::sessions` e `mem::replay::import-jsonl` — sem servidores paralelos.
@@ -418,7 +418,7 @@ As sessões importadas aparecem no seletor de Replay ao lado das nativas. Sob o 
 Use o comando de manutenção quando você intencionalmente quiser atualizar seu runtime local:
 
 ```bash
-npx @agentmemory/agentmemory upgrade
+npx @ruby_sakura/agentmemory upgrade
 ```
 
 Aviso: este comando muta o workspace/runtime atual. Pode atualizar dependências JavaScript e puxar a imagem Docker fixada `iiidev/iii:0.11.2`. Nunca instala um engine iii sem fixação ou mais recente.
@@ -428,7 +428,7 @@ Detalhes de implementação estão em `src/cli.ts` (veja `runUpgrade` na região
 ### Claude Code (um bloco, cole)
 
 ```text
-Install agentmemory: run `npx @agentmemory/agentmemory` in a separate terminal to start the memory server. Then run `/plugin marketplace add rohitg00/agentmemory` and `/plugin install agentmemory` — the plugin registers all 12 hooks, 4 skills, AND auto-wires the `@agentmemory/mcp` stdio server via its `.mcp.json`, so you get 53 MCP tools (memory_smart_search, memory_save, memory_sessions, memory_governance_delete, etc.) without any extra config step. Verify with `curl http://localhost:3111/agentmemory/health`. The real-time viewer is at http://localhost:3113.
+Install agentmemory: run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server. Then run `/plugin marketplace add rohitg00/agentmemory` and `/plugin install agentmemory` — the plugin registers all 12 hooks, 4 skills, AND auto-wires the `@ruby_sakura/mcp` stdio server via its `.mcp.json`, so you get 53 MCP tools (memory_smart_search, memory_save, memory_sessions, memory_governance_delete, etc.) without any extra config step. Verify with `curl http://localhost:3111/agentmemory/health`. The real-time viewer is at http://localhost:3113.
 ```
 
 #### Claude Code sem instalar o plugin (caminho MCP standalone)
@@ -441,14 +441,14 @@ Contorno:
 agentmemory connect claude-code --with-hooks
 ```
 
-Isso mescla os mesmos comandos de hook em `~/.claude/settings.json` com caminhos absolutos resolvidos para o diretório `plugin/` empacotado do pacote `@agentmemory/agentmemory` atualmente instalado. Rode o comando novamente após atualizar o agentmemory para atualizar os caminhos. Entradas de usuário no mesmo arquivo são preservadas; apenas entradas anteriores do agentmemory são substituídas. Usar o caminho `/plugin install` continua sendo a abordagem recomendada.
+Isso mescla os mesmos comandos de hook em `~/.claude/settings.json` com caminhos absolutos resolvidos para o diretório `plugin/` empacotado do pacote `@ruby_sakura/agentmemory` atualmente instalado. Rode o comando novamente após atualizar o agentmemory para atualizar os caminhos. Entradas de usuário no mesmo arquivo são preservadas; apenas entradas anteriores do agentmemory são substituídas. Usar o caminho `/plugin install` continua sendo a abordagem recomendada.
 Para deploys remotos ou protegidos, inicie o Claude Code com `AGENTMEMORY_URL` e `AGENTMEMORY_SECRET` definidos. O plugin repassa ambos os valores para seu servidor MCP empacotado; quando `AGENTMEMORY_URL` está vazio, o shim MCP usa `http://localhost:3111`.
 
 ### Codex CLI (plataforma de plugins do Codex)
 
 ```bash
 # 1. start the memory server in a separate terminal
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 
 # 2. register the agentmemory marketplace and install the plugin
 codex plugin marketplace add rohitg00/agentmemory
@@ -457,7 +457,7 @@ codex plugin add agentmemory@agentmemory
 
 O plugin do Codex é servido a partir do mesmo diretório `plugin/` do plugin do Claude Code. Ele registra:
 
-- `@agentmemory/mcp` como servidor MCP (faz proxy de todas as 51 tools quando `AGENTMEMORY_URL` aponta para um servidor agentmemory em execução; cai para 7 tools localmente quando não há servidor acessível)
+- `@ruby_sakura/mcp` como servidor MCP (faz proxy de todas as 51 tools quando `AGENTMEMORY_URL` aponta para um servidor agentmemory em execução; cai para 7 tools localmente quando não há servidor acessível)
 - 6 hooks de ciclo de vida: `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `PreCompact`, `Stop`
 - 4 skills: `/recall`, `/remember`, `/session-history`, `/forget`
 
@@ -479,13 +479,13 @@ Isso adiciona um bloco idempotente em `~/.codex/hooks.json` referenciando caminh
 <summary><b>OpenClaw (cole este prompt)</b></summary>
 
 ```text
-Install agentmemory for OpenClaw. Run `npx @agentmemory/agentmemory` in a separate terminal to start the memory server on localhost:3111. Then add this to my OpenClaw MCP config so agentmemory is available with all 51 memory tools:
+Install agentmemory for OpenClaw. Run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server on localhost:3111. Then add this to my OpenClaw MCP config so agentmemory is available with all 51 memory tools:
 
 {
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "http://localhost:3111"
       }
@@ -504,12 +504,12 @@ Guia completo: [`integrations/openclaw/`](../integrations/openclaw/)
 <summary><b>Hermes Agent (cole este prompt)</b></summary>
 
 ```text
-Install agentmemory for Hermes. Run `npx @agentmemory/agentmemory` in a separate terminal to start the memory server on localhost:3111. Then add this to ~/.hermes/config.yaml so Hermes can use agentmemory as an MCP server with all 51 memory tools:
+Install agentmemory for Hermes. Run `npx @ruby_sakura/agentmemory` in a separate terminal to start the memory server on localhost:3111. Then add this to ~/.hermes/config.yaml so Hermes can use agentmemory as an MCP server with all 51 memory tools:
 
 mcp_servers:
   agentmemory:
     command: npx
-    args: ["-y", "@agentmemory/mcp"]
+    args: ["-y", "@ruby_sakura/mcp"]
 
 memory:
   provider: agentmemory
@@ -523,14 +523,14 @@ Guia completo: [`integrations/hermes/`](../integrations/hermes/)
 
 ### Outros agentes
 
-Inicie o servidor de memória: `npx @agentmemory/agentmemory`
+Inicie o servidor de memória: `npx @ruby_sakura/agentmemory`
 
 A entrada do agentmemory é o **mesmo bloco de servidor MCP** em todo host que usa o formato `mcpServers` (Cursor, Claude Desktop, Cline, Roo Code, Windsurf, Gemini CLI, OpenClaw):
 
 ```json
 "agentmemory": {
   "command": "npx",
-  "args": ["-y", "@agentmemory/mcp"],
+  "args": ["-y", "@ruby_sakura/mcp"],
   "env": {
     "AGENTMEMORY_URL": "${AGENTMEMORY_URL}",
     "AGENTMEMORY_SECRET": "${AGENTMEMORY_SECRET}"
@@ -546,11 +546,11 @@ A entrada do agentmemory é o **mesmo bloco de servidor MCP** em todo host que u
 | **Claude Desktop** | `claude_desktop_config.json` (Application Support) | Mescle em `mcpServers`. Reinicie o Claude Desktop após editar. |
 | **Cline / Roo Code / Kilo Code** | Configurações MCP do Cline (Settings UI → MCP Servers → Edit) | Mesmo bloco `mcpServers`. |
 | **Windsurf** | `~/.codeium/windsurf/mcp_config.json` | Mesmo bloco `mcpServers`. |
-| **Gemini CLI** | `~/.gemini/settings.json` | `gemini mcp add agentmemory npx -y @agentmemory/mcp --scope user` (mescla automaticamente). |
+| **Gemini CLI** | `~/.gemini/settings.json` | `gemini mcp add agentmemory npx -y @ruby_sakura/mcp --scope user` (mescla automaticamente). |
 | **OpenClaw** | Configuração MCP do OpenClaw | Mesmo bloco `mcpServers`, ou use o [memory plugin](../integrations/openclaw/) mais profundo. |
-| **Codex CLI (somente MCP)** | `.codex/config.toml` | Formato TOML: `codex mcp add agentmemory -- npx -y @agentmemory/mcp`, ou adicione `[mcp_servers.agentmemory]` manualmente. |
+| **Codex CLI (somente MCP)** | `.codex/config.toml` | Formato TOML: `codex mcp add agentmemory -- npx -y @ruby_sakura/mcp`, ou adicione `[mcp_servers.agentmemory]` manualmente. |
 | **Codex CLI (plugin completo)** | Marketplace de plugins do Codex | `codex plugin marketplace add rohitg00/agentmemory` e depois `codex plugin add agentmemory@agentmemory`. Registra MCP + 6 hooks de ciclo de vida (SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, PreCompact, Stop) + 4 skills. No Codex Desktop, rode também `agentmemory connect codex --with-hooks` até que [openai/codex#16430](https://github.com/openai/codex/issues/16430) seja mergeado — os hooks de plugin estão silenciosos lá. |
-| **OpenCode (somente MCP)** | `opencode.json` | Formato diferente — chave `mcp` no topo, comando como array: `{"mcp": {"agentmemory": {"type": "local", "command": ["npx", "-y", "@agentmemory/mcp"], "enabled": true}}}`. |
+| **OpenCode (somente MCP)** | `opencode.json` | Formato diferente — chave `mcp` no topo, comando como array: `{"mcp": {"agentmemory": {"type": "local", "command": ["npx", "-y", "@ruby_sakura/mcp"], "enabled": true}}}`. |
 | **OpenCode (plugin completo)** | `plugin/opencode/` | 22 hooks de captura automática cobrindo ciclo de vida de sessão, mensagens, tools e erros. Dois comandos slash (`/recall`, `/remember`). Copie `plugin/opencode/` para seu workspace do OpenCode e adicione a entrada do plugin em `opencode.json`. Tabela completa de hooks + análise de gaps em [`plugin/opencode/README.md`](../plugin/opencode/README.md). |
 | **pi** | `~/.pi/agent/extensions/agentmemory` | Copie [`integrations/pi`](../integrations/pi/) e reinicie o pi. |
 | **Hermes Agent** | `~/.hermes/config.yaml` | Use o [memory provider plugin](../integrations/hermes/) mais profundo com `memory.provider: agentmemory`. |
@@ -626,7 +626,7 @@ iii --version
 # Should print: 0.11.2
 
 # 5. Then run agentmemory as usual:
-npx -y @agentmemory/agentmemory
+npx -y @ruby_sakura/agentmemory
 ```
 
 **Opção B — Docker Desktop:**
@@ -635,18 +635,18 @@ npx -y @agentmemory/agentmemory
 # 1. Install Docker Desktop for Windows
 # 2. Start Docker Desktop and make sure the engine is running
 # 3. Run agentmemory — it will auto-start the bundled compose file:
-npx -y @agentmemory/agentmemory
+npx -y @ruby_sakura/agentmemory
 ```
 
 **Opção C — apenas MCP standalone (sem engine):** se você só precisa das tools MCP para seu agente e não precisa da REST API, viewer ou cron jobs, pule o engine completamente:
 
 ```powershell
-npx -y @agentmemory/agentmemory mcp
+npx -y @ruby_sakura/agentmemory mcp
 # or via the shim package:
-npx -y @agentmemory/mcp
+npx -y @ruby_sakura/mcp
 ```
 
-**Diagnóstico para Windows:** se `npx @agentmemory/agentmemory` falhar, rode novamente com `--verbose` para ver o stderr real do engine. Modos de falha comuns:
+**Diagnóstico para Windows:** se `npx @ruby_sakura/agentmemory` falhar, rode novamente com `--verbose` para ver o stderr real do engine. Modos de falha comuns:
 
 | Sintoma | Correção |
 |---|---|
@@ -655,14 +655,14 @@ npx -y @agentmemory/mcp
 | Conflito de porta | `netstat -ano \| findstr :3111` para ver o que está em bind, mate o processo ou use `--port <N>` |
 | Fallback do Docker é pulado mesmo com Docker instalado | Confira se o Docker Desktop está de fato rodando (ícone na bandeja do sistema) |
 
-> Nota: o **engine** iii é um binário pré-compilado, não um crate do cargo — não tente instalá-lo com `cargo install`. (Os **SDKs** do iii são publicados no crates.io, npm e PyPI, mas o agentmemory não precisa deles.) Métodos de instalação do engine suportados, todos fixados em v0.11.2: o binário pré-compilado v0.11.2 acima, o script de instalação `sh` upstream **com a fixação de versão** `curl -fsSL https://install.iii.dev/iii/main/install.sh | VERSION=0.11.2 sh` (macOS/Linux) e a imagem Docker `iiidev/iii:0.11.2`. Um simples `install.sh | sh` instala o engine **mais recente**, que o agentmemory não suporta — sempre passe `VERSION=0.11.2`. O mais fácil de tudo: basta rodar `npx @agentmemory/agentmemory`, que busca o engine fixado em `~/.agentmemory/bin` para você.
+> Nota: o **engine** iii é um binário pré-compilado, não um crate do cargo — não tente instalá-lo com `cargo install`. (Os **SDKs** do iii são publicados no crates.io, npm e PyPI, mas o agentmemory não precisa deles.) Métodos de instalação do engine suportados, todos fixados em v0.11.2: o binário pré-compilado v0.11.2 acima, o script de instalação `sh` upstream **com a fixação de versão** `curl -fsSL https://install.iii.dev/iii/main/install.sh | VERSION=0.11.2 sh` (macOS/Linux) e a imagem Docker `iiidev/iii:0.11.2`. Um simples `install.sh | sh` instala o engine **mais recente**, que o agentmemory não suporta — sempre passe `VERSION=0.11.2`. O mais fácil de tudo: basta rodar `npx @ruby_sakura/agentmemory`, que busca o engine fixado em `~/.agentmemory/bin` para você.
 
 ---
 
 <h2 id="deploy">Deploy</h2>
 
 Templates de um clique para hosts gerenciados. Cada um inclui um
-Dockerfile autocontido que puxa `@agentmemory/agentmemory` do npm
+Dockerfile autocontido que puxa `@ruby_sakura/agentmemory` do npm
 e copia o binário do iii engine da imagem oficial `iiidev/iii` no
 Docker Hub — sem necessidade de imagem pré-compilada do agentmemory.
 Armazenamento persistente monta em `/data`; o entrypoint de primeiro
@@ -830,7 +830,7 @@ npm install @xenova/transformers
 
 53 tools, 6 resources, 3 prompts e 4 skills — o toolkit MCP de memória mais completo para qualquer agente.
 
-> **Shim MCP vs servidor completo:** o pacote publicado `@agentmemory/mcp` é um shim fino. Expõe a superfície completa de 51 tools **apenas quando consegue alcançar um servidor agentmemory em execução** via `AGENTMEMORY_URL` (modo proxy). Sem servidor acessível, o shim cai para um set local de 7 tools (`memory_save`, `memory_recall`, `memory_smart_search`, `memory_sessions`, `memory_export`, `memory_audit`, `memory_governance_delete`). A variável de ambiente `AGENTMEMORY_TOOLS=core|all` é uma flag *do lado do servidor* — defini-la no bloco `env` do shim não tem efeito. Se você vê só 7 tools no Cursor / OpenCode / Gemini CLI, inicie `npx @agentmemory/agentmemory` (ou a stack Docker) e defina `AGENTMEMORY_URL=http://localhost:3111`.
+> **Shim MCP vs servidor completo:** o pacote publicado `@ruby_sakura/mcp` é um shim fino. Expõe a superfície completa de 51 tools **apenas quando consegue alcançar um servidor agentmemory em execução** via `AGENTMEMORY_URL` (modo proxy). Sem servidor acessível, o shim cai para um set local de 7 tools (`memory_save`, `memory_recall`, `memory_smart_search`, `memory_sessions`, `memory_export`, `memory_audit`, `memory_governance_delete`). A variável de ambiente `AGENTMEMORY_TOOLS=core|all` é uma flag *do lado do servidor* — defini-la no bloco `env` do shim não tem efeito. Se você vê só 7 tools no Cursor / OpenCode / Gemini CLI, inicie `npx @ruby_sakura/agentmemory` (ou a stack Docker) e defina `AGENTMEMORY_URL=http://localhost:3111`.
 
 ### 51 Tools
 
@@ -913,8 +913,8 @@ npm install @xenova/transformers
 Rode sem o servidor completo — para qualquer cliente MCP. Qualquer um destes funciona:
 
 ```bash
-npx -y @agentmemory/agentmemory mcp   # canonical (always available)
-npx -y @agentmemory/mcp                # shim package alias
+npx -y @ruby_sakura/agentmemory mcp   # canonical (always available)
+npx -y @ruby_sakura/mcp                # shim package alias
 ```
 
 Ou adicione à configuração MCP do seu agente:
@@ -925,7 +925,7 @@ A maioria dos agentes (Cursor, Claude Desktop, Cline, Roo Code, Windsurf, Gemini
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "http://localhost:3111"
       }
@@ -942,7 +942,7 @@ OpenCode (`opencode.json`):
   "mcp": {
     "agentmemory": {
       "type": "local",
-      "command": ["npx", "-y", "@agentmemory/mcp"],
+      "command": ["npx", "-y", "@ruby_sakura/mcp"],
       "enabled": true
     }
   },

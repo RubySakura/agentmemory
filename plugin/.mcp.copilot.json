@@ -3,7 +3,7 @@
     "agentmemory": {
       "type": "local",
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "${AGENTMEMORY_URL:-http://localhost:3111}",
         "AGENTMEMORY_SECRET": "${AGENTMEMORY_SECRET:-}",

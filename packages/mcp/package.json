@@ -1,7 +1,7 @@
 {
-  "name": "@agentmemory/mcp",
-  "version": "0.9.27",
-  "description": "Standalone MCP server for agentmemory — thin shim that re-exposes @agentmemory/agentmemory's MCP entrypoint",
+  "name": "@ruby_sakura/mcp",
+  "version": "0.9.33",
+  "description": "Standalone MCP server for agentmemory — thin shim that re-exposes @ruby_sakura/agentmemory's MCP entrypoint",
   "type": "module",
   "bin": {
     "agentmemory-mcp": "./bin.mjs"
@@ -22,13 +22,13 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rohitg00/agentmemory",
+    "url": "https://github.com/RubySakura/agentmemory",
     "directory": "packages/mcp"
   },
-  "homepage": "https://github.com/rohitg00/agentmemory#readme",
-  "bugs": "https://github.com/rohitg00/agentmemory/issues",
+  "homepage": "https://github.com/RubySakura/agentmemory#readme",
+  "bugs": "https://github.com/RubySakura/agentmemory/issues",
   "dependencies": {
-    "@agentmemory/agentmemory": "~0.9.0"
+    "@ruby_sakura/agentmemory": "~0.9.33"
   },
   "publishConfig": {
     "access": "public",

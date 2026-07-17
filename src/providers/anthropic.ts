@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
 import type { MemoryProvider } from '../types.js'
+import { getProxyAgent } from './_fetch.js'
 
 export class AnthropicProvider implements MemoryProvider {
   name = 'anthropic'
@@ -8,7 +9,12 @@ export class AnthropicProvider implements MemoryProvider {
   private maxTokens: number
 
   constructor(apiKey: string, model: string, maxTokens: number, baseURL?: string) {
-    this.client = new Anthropic({ apiKey, ...(baseURL ? { baseURL } : {}) })
+    const agent = getProxyAgent()
+    this.client = new Anthropic({
+      apiKey,
+      ...(baseURL ? { baseURL } : {}),
+      ...(agent ? { httpAgent: agent } : {}),
+    })
     this.model = model
     this.maxTokens = maxTokens
   }

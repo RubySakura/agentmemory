@@ -22,7 +22,7 @@
 ### 1. Start the agentmemory server
 
 ```bash
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 ```
 
 The server starts on `http://localhost:3111`.
@@ -36,7 +36,7 @@ Add to `~/.config/opencode/opencode.json` or your project's `.opencode/opencode.
   "mcp": {
     "agentmemory": {
       "type": "local",
-      "command": ["npx", "-y", "@agentmemory/mcp"],
+      "command": ["npx", "-y", "@ruby_sakura/mcp"],
       "enabled": true
     }
   }

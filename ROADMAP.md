@@ -27,7 +27,7 @@ Anything not on this list that a contributor wants to pursue is welcome — open
 - [x] Health severity gated on RSS floor (#158 / PR #160)
 - [x] Standalone MCP proxies to the running server (#159 / PR #161)
 - [x] Audit coverage for `mem::forget` + audit policy doc (#125 / PR #162)
-- [x] `@agentmemory/fs-watcher` filesystem connector (#62 / PR #163)
+- [x] `@ruby_sakura/fs-watcher` filesystem connector (#62 / PR #163)
 - [x] Next.js website on Vercel (PR #164)
 - [x] CI publishes all three npm packages on release (PR #166)
 

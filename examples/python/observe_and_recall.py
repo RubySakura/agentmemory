@@ -5,7 +5,7 @@ agentmemory to render the most relevant context back at a fixed token budget.
 
 Prerequisites:
     pip install iii-sdk
-    npx -y @agentmemory/agentmemory
+    npx -y @ruby_sakura/agentmemory
 
 Run:
     python examples/python/observe_and_recall.py

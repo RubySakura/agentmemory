@@ -7,7 +7,7 @@ const UNIVERSAL_JSON = `{
   "mcpServers": {
     "agentmemory": {
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "http://localhost:3111"
       }
@@ -17,7 +17,7 @@ const UNIVERSAL_JSON = `{
 
 const CODEX_TOML = `[mcp_servers.agentmemory]
 command = "npx"
-args    = ["-y", "@agentmemory/mcp"]
+args    = ["-y", "@ruby_sakura/mcp"]
 
 [mcp_servers.agentmemory.env]
 AGENTMEMORY_URL = "http://localhost:3111"`;
@@ -26,7 +26,7 @@ const OPENCODE_JSON = `{
   "mcp": {
     "agentmemory": {
       "type": "local",
-      "command": ["npx", "-y", "@agentmemory/mcp"],
+      "command": ["npx", "-y", "@ruby_sakura/mcp"],
       "enabled": true,
       "environment": {
         "AGENTMEMORY_URL": "http://localhost:3111"
@@ -40,7 +40,7 @@ const VSCODE_MCP_JSON = `{
     "agentmemory": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@agentmemory/mcp"],
+      "args": ["-y", "@ruby_sakura/mcp"],
       "env": {
         "AGENTMEMORY_URL": "http://localhost:3111"
       }
@@ -48,7 +48,7 @@ const VSCODE_MCP_JSON = `{
   }
 }`;
 
-const CLAUDE_CODE_CMD = `claude mcp add agentmemory -- npx -y @agentmemory/mcp`;
+const CLAUDE_CODE_CMD = `claude mcp add agentmemory -- npx -y @ruby_sakura/mcp`;
 const COPILOT_CLI_CMD = `agentmemory connect copilot-cli`;
 const WARP_CMD = `agentmemory connect warp`;
 
@@ -68,7 +68,7 @@ const OPENCLAW_YAML = `plugins:
 function cursorDeeplink(): string {
   const cfg = {
     command: "npx",
-    args: ["-y", "@agentmemory/mcp"],
+    args: ["-y", "@ruby_sakura/mcp"],
     env: { AGENTMEMORY_URL: "http://localhost:3111" },
   };
   const base64 =
@@ -82,7 +82,7 @@ function vscodeDeeplink(): string {
   const cfg = {
     name: "agentmemory",
     command: "npx",
-    args: ["-y", "@agentmemory/mcp"],
+    args: ["-y", "@ruby_sakura/mcp"],
     env: { AGENTMEMORY_URL: "http://localhost:3111" },
   };
   const payload =

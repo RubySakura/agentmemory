@@ -1,4 +1,4 @@
-# @agentmemory/fs-watcher
+# @ruby_sakura/fs-watcher
 
 Filesystem connector for agentmemory. Watches one or more directories and emits an observation to the running agentmemory server every time a file changes.
 
@@ -7,13 +7,13 @@ Part of the data-source-connectors effort tracked in issue #62.
 ## Install
 
 ```bash
-npm install -g @agentmemory/fs-watcher
+npm install -g @ruby_sakura/fs-watcher
 ```
 
 Or run without installing:
 
 ```bash
-npx @agentmemory/fs-watcher ~/work/my-repo
+npx @ruby_sakura/fs-watcher ~/work/my-repo
 ```
 
 ## Usage

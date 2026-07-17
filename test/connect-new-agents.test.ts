@@ -4,7 +4,7 @@ import { tmpdir, platform } from "node:os";
 import { join } from "node:path";
 
 // Connect adapters for Qwen Code, Antigravity, and Kiro. Each writes
-// the canonical MCP block (npx @agentmemory/mcp + env defaults) into
+// the canonical MCP block (npx @ruby_sakura/mcp + env defaults) into
 // the agent's documented config path.
 
 function freshHome(): string {
@@ -39,7 +39,7 @@ describe("connect: Qwen Code", () => {
       readFileSync(join(home, ".qwen", "settings.json"), "utf-8"),
     );
     expect(cfg.mcpServers.agentmemory.command).toBe("npx");
-    expect(cfg.mcpServers.agentmemory.args).toContain("@agentmemory/mcp");
+    expect(cfg.mcpServers.agentmemory.args).toContain("@ruby_sakura/mcp");
     expect(cfg.mcpServers.agentmemory.env.AGENTMEMORY_URL).toMatch(
       /\$\{AGENTMEMORY_URL:-/,
     );
@@ -110,7 +110,7 @@ describe("connect: Kiro", () => {
     expect(existsSync(cfgPath)).toBe(true);
     const cfg = JSON.parse(readFileSync(cfgPath, "utf-8"));
     expect(cfg.mcpServers.agentmemory.command).toBe("npx");
-    expect(cfg.mcpServers.agentmemory.args).toContain("@agentmemory/mcp");
+    expect(cfg.mcpServers.agentmemory.args).toContain("@ruby_sakura/mcp");
   });
 });
 
@@ -142,7 +142,7 @@ describe("connect: Warp", () => {
     expect(existsSync(cfgPath)).toBe(true);
     const cfg = JSON.parse(readFileSync(cfgPath, "utf-8"));
     expect(cfg.mcpServers.agentmemory.command).toBe("npx");
-    expect(cfg.mcpServers.agentmemory.args).toContain("@agentmemory/mcp");
+    expect(cfg.mcpServers.agentmemory.args).toContain("@ruby_sakura/mcp");
     expect(cfg.mcpServers.agentmemory.env.AGENTMEMORY_URL).toMatch(
       /\$\{AGENTMEMORY_URL:-/,
     );
@@ -177,7 +177,7 @@ describe("connect: Cline", () => {
       readFileSync(join(home, ".cline", "mcp.json"), "utf-8"),
     );
     expect(cfg.mcpServers.agentmemory.command).toBe("npx");
-    expect(cfg.mcpServers.agentmemory.args).toContain("@agentmemory/mcp");
+    expect(cfg.mcpServers.agentmemory.args).toContain("@ruby_sakura/mcp");
   });
 });
 
@@ -209,7 +209,7 @@ describe("connect: Droid (Factory.ai)", () => {
       readFileSync(join(home, ".factory", "mcp.json"), "utf-8"),
     );
     expect(cfg.mcpServers.agentmemory.command).toBe("npx");
-    expect(cfg.mcpServers.agentmemory.args).toContain("@agentmemory/mcp");
+    expect(cfg.mcpServers.agentmemory.args).toContain("@ruby_sakura/mcp");
     // Droid requires `type` per its documented schema
     expect(cfg.mcpServers.agentmemory.type).toBe("stdio");
   });
@@ -243,7 +243,7 @@ describe("connect: Zed", () => {
       readFileSync(join(home, ".config", "zed", "settings.json"), "utf-8"),
     );
     expect(cfg.context_servers.agentmemory.command).toBe("npx");
-    expect(cfg.context_servers.agentmemory.args).toContain("@agentmemory/mcp");
+    expect(cfg.context_servers.agentmemory.args).toContain("@ruby_sakura/mcp");
     expect(cfg.mcpServers).toBeUndefined();
   });
 });
@@ -278,7 +278,7 @@ describe("connect: Continue.dev", () => {
     const yaml = readFileSync(yamlPath, "utf-8");
     expect(yaml).toContain("mcpServers:");
     expect(yaml).toContain("name: agentmemory");
-    expect(yaml).toContain("@agentmemory/mcp");
+    expect(yaml).toContain("@ruby_sakura/mcp");
     expect(yaml).toContain("AGENTMEMORY_URL");
   });
 
@@ -300,7 +300,7 @@ describe("connect: Continue.dev", () => {
       (s: { name: string }) => s.name === "agentmemory",
     );
     expect(entry.command).toBe("npx");
-    expect(entry.args).toContain("@agentmemory/mcp");
+    expect(entry.args).toContain("@ruby_sakura/mcp");
   });
 
   it("returns stub when config.yaml already exists (refuses silent yaml mutation)", async () => {

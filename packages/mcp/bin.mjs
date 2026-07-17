@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import("@agentmemory/agentmemory/dist/standalone.mjs").catch((err) => {
+import("@ruby_sakura/agentmemory/dist/standalone.mjs").catch((err) => {
   console.error(
-    "[@agentmemory/mcp] Failed to load standalone entrypoint from @agentmemory/agentmemory.",
+    "[@ruby_sakura/mcp] Failed to load standalone entrypoint from @ruby_sakura/agentmemory.",
   );
   console.error(
-    "[@agentmemory/mcp] Try installing manually: npm i -g @agentmemory/agentmemory",
+    "[@ruby_sakura/mcp] Try installing manually: npm i -g @ruby_sakura/agentmemory",
   );
   console.error(err instanceof Error ? err.stack || err.message : String(err));
   process.exit(1);

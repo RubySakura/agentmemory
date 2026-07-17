@@ -27,7 +27,7 @@
 **Paste this prompt into Hermes** and it does the whole setup for you:
 
 ```text
-Install agentmemory for Hermes. Run `npx @agentmemory/agentmemory` in a
+Install agentmemory for Hermes. Run `npx @ruby_sakura/agentmemory` in a
 separate terminal to start the memory server on localhost:3111. Then
 add this to `~/.hermes/config.yaml` so Hermes can use agentmemory as
 an MCP server with all 43 memory tools:
@@ -35,7 +35,7 @@ an MCP server with all 43 memory tools:
 mcp_servers:
   agentmemory:
     command: npx
-    args: ["-y", "@agentmemory/mcp"]
+    args: ["-y", "@ruby_sakura/mcp"]
 
 memory:
   provider: agentmemory
@@ -64,7 +64,7 @@ Add to `~/.hermes/config.yaml`:
 mcp_servers:
   agentmemory:
     command: npx
-    args: ["-y", "@agentmemory/mcp"]
+    args: ["-y", "@ruby_sakura/mcp"]
 
 memory:
   provider: agentmemory
@@ -73,7 +73,7 @@ memory:
 This gives Hermes access to all 43 MCP tools and enables the agentmemory memory provider. Start the server separately:
 
 ```bash
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 ```
 
 ### Option 2: Memory provider plugin (deeper integration)
@@ -87,7 +87,7 @@ cp -r integrations/hermes ~/.hermes/plugins/agentmemory
 Start the agentmemory server:
 
 ```bash
-npx @agentmemory/agentmemory
+npx @ruby_sakura/agentmemory
 ```
 
 The plugin auto-detects the running server and hooks into the Hermes agent loop. Make sure `memory.provider` is set to `agentmemory` in `~/.hermes/config.yaml`:

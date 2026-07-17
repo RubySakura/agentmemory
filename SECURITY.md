@@ -11,7 +11,7 @@ Use one of:
 
 Include, at minimum:
 
-- agentmemory version (`npm view @agentmemory/agentmemory version` against your install).
+- agentmemory version (`npm view @ruby_sakura/agentmemory version` against your install).
 - The affected surface — REST endpoint, MCP tool, hook, CLI flag, or filesystem layout.
 - A minimal reproduction — prefer one curl invocation or one MCP tool call plus the environment state required.
 - Impact, in your own words.
@@ -38,9 +38,9 @@ At v1.0 this policy switches to a stated LTS window per the roadmap.
 
 In scope:
 
-- The `@agentmemory/agentmemory` server (REST + MCP surface, hook handlers, state store).
-- The `@agentmemory/mcp` standalone MCP server.
-- The `@agentmemory/fs-watcher` connector.
+- The `@ruby_sakura/agentmemory` server (REST + MCP surface, hook handlers, state store).
+- The `@ruby_sakura/mcp` standalone MCP server.
+- The `@ruby_sakura/fs-watcher` connector.
 - First-party integrations under `integrations/` (`hermes/`, `openclaw/`, `filesystem-watcher/`).
 - The Claude Code plugin under `plugin/`.
 

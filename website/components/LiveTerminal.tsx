@@ -12,7 +12,7 @@ interface Seg {
 function buildScript(mcpTools: number, hooks: number): Seg[] {
   return [
     { t: "prompt", text: "$ " },
-    { t: "typed", text: "npx @agentmemory/agentmemory\n" },
+    { t: "typed", text: "npx @ruby_sakura/agentmemory\n" },
     { t: "plain", text: "[agentmemory] iii-engine ready on :3111\n" },
     { t: "plain", text: `[agentmemory] ${mcpTools} MCP tools registered\n` },
     { t: "plain", text: `[agentmemory] ${hooks} autohooks armed\n\n` },

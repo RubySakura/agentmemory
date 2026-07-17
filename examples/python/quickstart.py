@@ -2,7 +2,7 @@
 
 Prerequisites:
     pip install iii-sdk
-    npx -y @agentmemory/agentmemory  # daemon at ws://localhost:49134
+    npx -y @ruby_sakura/agentmemory  # daemon at ws://localhost:49134
 
 Run:
     python examples/python/quickstart.py
